@@ -1,0 +1,40 @@
+.courseCard {
+  border: 2px solid #9ABCA8;
+  margin: 1% 1%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75%;
+}
+
+.courseDescription{
+  margin: 1% 2% 1% 1%;
+  width: 75%;
+}
+
+.courseDescription .title{
+  margin-bottom: 2.5%;
+}
+
+.courseInfo{
+  width: 25%;
+}
+
+.courseInfo > button{
+  margin-left: 20%;
+}
+
+.information {
+  font-size: 1.03em;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  font-weight: bold;
+  overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+max-width: 296px;
+}
+
+.information >.info{
+  overflow: hidden;
+  font-weight: normal;
+}

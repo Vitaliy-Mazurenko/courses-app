@@ -1,0 +1,22 @@
+.courseCard {
+  border: 2px solid #9ABCA8;
+  margin: 1% 1%;
+  align-items: center;
+}
+
+.search{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-right: 0.8%;
+}
+
+.search .form-inline {
+  margin: 1%;
+  width: 60%;
+}
+.search .form-inline > input{
+  display: inline-flex;
+  height: 33px;
+  width: 60%;
+}
