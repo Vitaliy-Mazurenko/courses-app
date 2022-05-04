@@ -4,7 +4,7 @@ import Input from '../../../../common/Input/Input.jsx';
 import { BUTTON_TEXT, BUTTON_ADD_COURSE } from '../../../../constants';
 import './searchBar.css';
 
-export default function SearchBar({ valChange }) {
+export default function SearchBar({ valChange, showCreate }) {
 	const [value, setValue] = useState('');
 
 	const handleSubmit = (e) => {
@@ -17,14 +17,14 @@ export default function SearchBar({ valChange }) {
 		<div className='search'>
 			<form onSubmit={handleSubmit} className='form-inline'>
 				<Input
-					text='text'
+					type='text'
 					placeholder='Enter course name...'
 					value={value}
 					onChange={(e) => setValue(e.target.value)}
 				/>
 				<Button type='submit' text={BUTTON_TEXT} />
 			</form>
-			<Button text={BUTTON_ADD_COURSE} />
+			<Button text={BUTTON_ADD_COURSE} onClick={() => showCreate(true)} />
 		</div>
 	);
 }

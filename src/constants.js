@@ -61,3 +61,9 @@ export const BUTTON_SHOW = 'Show course';
 export const BUTTON_LOGOUT = 'Logout';
 
 export const BUTTON_ADD_COURSE = 'Add new course';
+
+export const BTN_CREATE_COURSE = 'Create course';
+
+export const BTN_CREATE_AUTHOR = 'Create author';
+
+export const BTN_ADD_AUTHOR = 'Add author';

@@ -4,7 +4,7 @@ import CourseCard from './components/CourseCard/CourseCard.jsx';
 import SearchBar from './components/SearchBar/SearchBar.jsx';
 import './courses.css';
 
-export default function Courses() {
+export default function Courses({ showCreate }) {
 	const [courses, setCourse] = useState([...mockedCoursesList]);
 	const valChange = (val) => {
 		if (val) {
@@ -20,7 +20,7 @@ export default function Courses() {
 
 	return (
 		<div className='Courses'>
-			<SearchBar valChange={valChange} />
+			<SearchBar valChange={valChange} showCreate={showCreate} />
 			{courses.map((course) => (
 				<div key={course.id}>
 					<CourseCard course={course} />
