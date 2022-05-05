@@ -51,7 +51,9 @@
   margin: 1%;
   width: 50%;
 }
-
+.author-create > .myInput{
+width: 95%;
+}
 .authors{
   margin: 1%;
   width: 50%;
@@ -65,7 +67,30 @@
   margin-bottom: 4%;
 }
 
-.duration-title {
+.duration-title{
   text-align: center;
   margin-top: 50px;
+}
+
+.validate{
+  color: #e11;
+}
+
+.info-duration{
+  margin: 25px 0 15px;
+  font-size: 17px;
+}
+
+.info-duration > b{
+  font-size: 19px;
+}
+
+.info{
+  margin-left: 3%;
+}
+
+.author-item{
+  display: flex;
+  justify-content: space-between;
+  width: 61%;
 }

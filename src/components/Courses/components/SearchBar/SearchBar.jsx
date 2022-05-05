@@ -18,7 +18,7 @@ export default function SearchBar({ valChange, showCreate }) {
 			<form onSubmit={handleSubmit} className='form-inline'>
 				<Input
 					type='text'
-					placeholder='Enter course name...'
+					placeholder='Enter course name or id...'
 					value={value}
 					onChange={(e) => setValue(e.target.value)}
 				/>
