@@ -94,3 +94,7 @@ width: 95%;
   justify-content: space-between;
   width: 61%;
 }
+
+.authors-course > button{
+  padding: 6px 28px;
+}

@@ -18,6 +18,10 @@ function App() {
 		setAuthorsList([...authorsList, newAuthor]);
 	};
 
+	const addCourse = (newCourse) => {
+		setCourse([...coursesList, newCourse]);
+	};
+
 	return (
 		<div className='App'>
 			<Header />
@@ -26,9 +30,14 @@ function App() {
 					showCreate={showCreate}
 					authorsList={authorsList}
 					addAuthor={addAuthor}
+					addCourse={addCourse}
 				/>
 			) : (
-				<Courses showCreate={showCreate} coursesList={coursesList} />
+				<Courses
+					showCreate={showCreate}
+					coursesList={coursesList}
+					authorsList={authorsList}
+				/>
 			)}
 		</div>
 	);

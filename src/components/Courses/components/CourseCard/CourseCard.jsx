@@ -1,23 +1,16 @@
 import React from 'react';
-import { mockedAuthorsList, BUTTON_SHOW } from '../../../../constants';
+import { BUTTON_SHOW } from '../../../../constants';
 import Button from '../../../../common/Button/Button.jsx';
 import './courseCard.css';
 
-const CourseCard = ({ course }) => {
+const CourseCard = ({ course, authorsList }) => {
 	function authorName(n, ids) {
 		for (let i in ids) {
-			if (n['id'] === ids[i] && i < ids.length - 1) {
+			if (n['id'] === ids[i]) {
 				return (
 					<span key={ids[i]} className='authorsCourse'>
 						{' '}
 						{n['name']},
-					</span>
-				);
-			} else if (n['id'] === ids[i]) {
-				return (
-					<span key={ids[i]} className='authorsCourse'>
-						{' '}
-						{n['name']}
 					</span>
 				);
 			}
@@ -35,17 +28,18 @@ const CourseCard = ({ course }) => {
 					<p className='information'>
 						Authors:
 						<span className='info'>
-							{[...mockedAuthorsList].map((item) =>
-								authorName(item, course.authors)
-							)}
+							{[...authorsList].map((item) => authorName(item, course.authors))}
 						</span>
 					</p>
 					<p className='information'>
 						Duration:{' '}
 						<span className='info'>
-							{Math.trunc(course.duration / 60) +
+							{(course.duration < 600 ? '0' : '') +
+								Math.trunc(course.duration / 60) +
 								':' +
-								(course.duration % 60) +
+								(course.duration % 60 < 10
+									? '0' + (course.duration % 60)
+									: course.duration % 60) +
 								' hours'}
 						</span>
 					</p>

@@ -1,35 +1,52 @@
 import React, { useState, useEffect } from 'react';
+import { v4 as uuid } from 'uuid';
 import {
 	BTN_CREATE_COURSE,
 	BTN_CREATE_AUTHOR,
 	BTN_ADD_AUTHOR,
+	BTN_DEL_AUTHOR,
 } from '../../constants';
 import Button from '../../common/Button/Button.jsx';
 import Input from '../../common/Input/Input.jsx';
 import './createCourse.css';
 
-function CreateCourse({ showCreate, authorsList, addAuthor }) {
-	const [valueTitle, setTitle] = useState('');
+function CreateCourse({ showCreate, authorsList, addAuthor, addCourse }) {
+	const [title, setTitle] = useState('');
 	const [authors, setAuthors] = useState(authorsList);
+	const [authorCourse, setAuthorCourse] = useState('');
 	const [valueAuthor, setAuthor] = useState('');
-	const [textArea, setTextArea] = useState('');
+	const [description, setDescription] = useState('');
 	const [duration, setDuration] = useState('');
 	const [checkTextArea, setCheckTextArea] = useState('');
 	const [checkAuthor, setCheckAuthor] = useState('');
 
 	useEffect(() => {
-		setAuthors(authorsList);
-		console.log(authorsList);
-	}, [authorsList]);
+		setAuthors(authors);
+	}, [authors, authorsList]);
 
 	const handleCreate = (e) => {
 		e.preventDefault();
-		if (!textArea || !valueTitle || !duration) {
+		if (!description || !title || !duration) {
 			alert('Please, fill in all fields');
-		} else if (textArea.length < 2) {
+		} else if (description.length < 2) {
 			setCheckTextArea('text length should be at least 2 characters');
 		} else {
 			setCheckTextArea('');
+			let d = new Date();
+			let creationDate =
+				d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
+			let authors = [];
+			for (let i of authorCourse) {
+				authors.push(i.id);
+			}
+			addCourse({
+				id: uuid(),
+				title,
+				description,
+				creationDate,
+				duration,
+				authors,
+			});
 			showCreate(false);
 		}
 	};
@@ -39,15 +56,30 @@ function CreateCourse({ showCreate, authorsList, addAuthor }) {
 		if (valueAuthor.length < 2) {
 			setCheckAuthor('author name length should be at least 2 characters');
 		} else {
-			const newAuthor = { id: Date.now(), name: valueAuthor };
+			const newAuthor = { id: uuid(), name: valueAuthor };
 			addAuthor(newAuthor);
 			setCheckAuthor('');
+			setAuthors([...authors, newAuthor]);
 			setAuthor('');
 		}
 	}
 
 	function addCourseAuthor(e) {
 		e.preventDefault();
+		setAuthors(authors.filter((aut) => aut.id !== e.target.id));
+		setAuthorCourse([
+			...authorCourse,
+			...authors.filter((aut) => aut.id === e.target.id),
+		]);
+	}
+
+	function delCourseAuthor(e) {
+		e.preventDefault();
+		setAuthorCourse(authorCourse.filter((aut) => aut.id !== e.target.id));
+		setAuthors([
+			...authors,
+			...authorCourse.filter((aut) => aut.id === e.target.id),
+		]);
 	}
 
 	return (
@@ -59,7 +91,7 @@ function CreateCourse({ showCreate, authorsList, addAuthor }) {
 						minLength='2'
 						type='text'
 						placeholder='Enter title...'
-						value={valueTitle}
+						value={title}
 						onChange={(e) => setTitle(e.target.value)}
 					/>
 					<Button
@@ -72,9 +104,9 @@ function CreateCourse({ showCreate, authorsList, addAuthor }) {
 				<label>Description</label>
 				<textarea
 					type='text'
-					value={textArea}
+					value={description}
 					placeholder='Enter description'
-					onChange={(e) => setTextArea(e.target.value)}
+					onChange={(e) => setDescription(e.target.value)}
 				/>
 				<span className='validate'>{checkTextArea}</span>
 				<div className='authors-wrap'>
@@ -131,6 +163,20 @@ function CreateCourse({ showCreate, authorsList, addAuthor }) {
 							))}
 						</p>
 						<div className='author-title'>Course authors</div>
+						<p className='info'>
+							{[...authorCourse].map((item) => (
+								<span key={item['id']} className='author-item authors-course'>
+									{' '}
+									{item['name']}
+									<Button
+										id={item['id']}
+										className='btn-add'
+										text={BTN_DEL_AUTHOR}
+										onClick={(e) => delCourseAuthor(e)}
+									/>
+								</span>
+							))}
+						</p>
 					</div>
 				</div>
 			</form>
