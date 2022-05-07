@@ -9,6 +9,8 @@ import {
 import Button from '../../common/Button/Button.jsx';
 import Input from '../../common/Input/Input.jsx';
 import './createCourse.css';
+import dateGenerator from '../../helpers/dateGenerator';
+import pipeDuration from '../../helpers/pipeDuration';
 
 function CreateCourse({ showCreate, authorsList, addAuthor, addCourse }) {
 	const [title, setTitle] = useState('');
@@ -32,9 +34,7 @@ function CreateCourse({ showCreate, authorsList, addAuthor, addCourse }) {
 			setCheckTextArea('text length should be at least 2 characters');
 		} else {
 			setCheckTextArea('');
-			let d = new Date();
-			let creationDate =
-				d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
+			let creationDate = dateGenerator(new Date());
 			let authors = [];
 			for (let i of authorCourse) {
 				authors.push(i.id);
@@ -135,15 +135,7 @@ function CreateCourse({ showCreate, authorsList, addAuthor, addCourse }) {
 							onChange={(e) => setDuration(e.target.value)}
 						/>
 						<span className='info-duration'>
-							Duration:{' '}
-							<b>
-								{(duration < 600 ? '0' : '') +
-									Math.trunc(duration / 60) +
-									':' +
-									(duration % 60 < 10 ? '0' : '') +
-									(duration % 60)}
-							</b>{' '}
-							hours
+							Duration: <b>{pipeDuration(duration)}</b> hours
 						</span>
 					</div>
 					<div className='authors'>
@@ -163,6 +155,9 @@ function CreateCourse({ showCreate, authorsList, addAuthor, addCourse }) {
 							))}
 						</p>
 						<div className='author-title'>Course authors</div>
+						<div className='author-title'>
+							{authorCourse.length === 0 ? 'Author list is empty' : ''}
+						</div>
 						<p className='info'>
 							{[...authorCourse].map((item) => (
 								<span key={item['id']} className='author-item authors-course'>

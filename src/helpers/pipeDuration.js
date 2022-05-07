@@ -1,3 +1,9 @@
-export default function pipeDuration() {
-	return <div className='pipeDuration'>pipe</div>;
+export default function pipeDuration(duration) {
+	return (
+		(duration < 600 ? '0' : '') +
+		Math.trunc(duration / 60) +
+		':' +
+		(duration % 60 < 10 ? '0' : '') +
+		(duration % 60)
+	);
 }

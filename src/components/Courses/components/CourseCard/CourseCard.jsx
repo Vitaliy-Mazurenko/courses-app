@@ -2,6 +2,7 @@ import React from 'react';
 import { BUTTON_SHOW } from '../../../../constants';
 import Button from '../../../../common/Button/Button.jsx';
 import './courseCard.css';
+import pipeDuration from '../../../../helpers/pipeDuration';
 
 const CourseCard = ({ course, authorsList }) => {
 	function formDate(iDate) {
@@ -32,13 +33,7 @@ const CourseCard = ({ course, authorsList }) => {
 					<p className='information'>
 						Duration:{' '}
 						<span className='info'>
-							{(course.duration < 600 ? '0' : '') +
-								Math.trunc(course.duration / 60) +
-								':' +
-								(course.duration % 60 < 10
-									? '0' + (course.duration % 60)
-									: course.duration % 60) +
-								' hours'}
+							{pipeDuration(course.duration) + ' hours'}
 						</span>
 					</p>
 					<p className='information'>
