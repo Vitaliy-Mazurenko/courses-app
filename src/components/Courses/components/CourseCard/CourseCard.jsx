@@ -4,16 +4,11 @@ import Button from '../../../../common/Button/Button.jsx';
 import './courseCard.css';
 
 const CourseCard = ({ course, authorsList }) => {
-	function authorName(n, ids) {
-		for (let i in ids) {
-			if (n['id'] === ids[i]) {
-				return (
-					<span key={ids[i]} className='authorsCourse'>
-						{' '}
-						{n['name']},
-					</span>
-				);
-			}
+	function formDate(iDate) {
+		if (iDate < 10) {
+			return '0' + iDate;
+		} else {
+			return iDate;
 		}
 	}
 
@@ -28,7 +23,10 @@ const CourseCard = ({ course, authorsList }) => {
 					<p className='information'>
 						Authors:
 						<span className='info'>
-							{[...authorsList].map((item) => authorName(item, course.authors))}
+							{authorsList
+								.filter((item) => course.authors.includes(item['id']))
+								.map((item) => ' ' + item.name)
+								.toString()}
 						</span>
 					</p>
 					<p className='information'>
@@ -46,7 +44,11 @@ const CourseCard = ({ course, authorsList }) => {
 					<p className='information'>
 						Creation:{' '}
 						<span className='info'>
-							{course.creationDate.replace(new RegExp('/', 'g'), '.')}
+							{course.creationDate
+								.split('/')
+								.map((item) => formDate(item))
+								.toString()
+								.replace(new RegExp(',', 'g'), '.')}
 						</span>
 					</p>
 					<Button text={BUTTON_SHOW} />
