@@ -4,7 +4,7 @@ import Logo from './components/Logo/Logo';
 import Button from '../../common/Button/Button';
 import { BUTTON_LOGOUT } from '../../constants';
 
-export default function Header() {
+export default function CourseInfo() {
 	return (
 		<div className='Header'>
 			<Logo />

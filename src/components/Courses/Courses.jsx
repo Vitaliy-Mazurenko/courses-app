@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import CourseCard from './components/CourseCard/CourseCard.jsx';
-import SearchBar from './components/SearchBar/SearchBar.jsx';
+import Header from '../Header/Header';
+import CourseCard from './components/CourseCard/CourseCard';
+import SearchBar from './components/SearchBar/SearchBar';
 import './courses.css';
 
 export default function Courses({ showCreate, coursesList, authorsList }) {
@@ -25,13 +26,16 @@ export default function Courses({ showCreate, coursesList, authorsList }) {
 	};
 
 	return (
-		<div className='Courses'>
-			<SearchBar valChange={valChange} showCreate={showCreate} />
-			{courses.map((course) => (
-				<div key={course.id}>
-					<CourseCard course={course} authorsList={authorsList} />
-				</div>
-			))}
-		</div>
+		<>
+			<Header />
+			<div className='Courses'>
+				<SearchBar valChange={valChange} showCreate={showCreate} />
+				{courses.map((course) => (
+					<div key={course.id}>
+						<CourseCard course={course} authorsList={authorsList} />
+					</div>
+				))}
+			</div>
+		</>
 	);
 }

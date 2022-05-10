@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
-import Button from '../../../../common/Button/Button.jsx';
-import Input from '../../../../common/Input/Input.jsx';
+import { useNavigate } from 'react-router-dom';
+import Button from '../../../../common/Button/Button';
+import Input from '../../../../common/Input/Input';
 import { BUTTON_TEXT, BUTTON_ADD_COURSE } from '../../../../constants';
 import './searchBar.css';
 
-export default function SearchBar({ valChange, showCreate }) {
+export default function SearchBar({ valChange }) {
 	const [value, setValue] = useState('');
+	let navigate = useNavigate();
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		valChange(value);
 		setValue('');
+	};
+	const createCourse = () => {
+		navigate('/createCourses');
 	};
 
 	return (
@@ -24,7 +29,7 @@ export default function SearchBar({ valChange, showCreate }) {
 				/>
 				<Button type='submit' text={BUTTON_TEXT} />
 			</form>
-			<Button text={BUTTON_ADD_COURSE} onClick={() => showCreate(true)} />
+			<Button text={BUTTON_ADD_COURSE} onClick={() => createCourse()} />
 		</div>
 	);
 }

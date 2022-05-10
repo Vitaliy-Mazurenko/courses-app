@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { mockedCoursesList, mockedAuthorsList } from './constants';
-import Header from './components/Header/Header.jsx';
-import Courses from './components/Courses/Courses.jsx';
-import CreateCourse from './components/CreateCourse/CreateCourse.jsx';
+import Login from './components/Login/Login';
+import Registration from './components/Registration/Registration';
+import Courses from './components/Courses/Courses';
+import CreateCourse from './components/CreateCourse/CreateCourse';
 import './App.css';
 
 function App() {
 	const [coursesList, setCourse] = useState([...mockedCoursesList]);
 	const [authorsList, setAuthorsList] = useState([...mockedAuthorsList]);
-	const [show, setShowCreate] = useState(false);
-
-	const showCreate = (hide) => {
-		setShowCreate(hide);
-	};
 
 	const addAuthor = (newAuthor) => {
 		setAuthorsList([...authorsList, newAuthor]);
@@ -24,21 +21,28 @@ function App() {
 
 	return (
 		<div className='App'>
-			<Header />
-			{show ? (
-				<CreateCourse
-					showCreate={showCreate}
-					authorsList={authorsList}
-					addAuthor={addAuthor}
-					addCourse={addCourse}
-				/>
-			) : (
-				<Courses
-					showCreate={showCreate}
-					coursesList={coursesList}
-					authorsList={authorsList}
-				/>
-			)}
+			<Router>
+				<Routes>
+					<Route exact path='/' element={<Login />} />
+					<Route path='/registration' element={<Registration />} />
+					<Route
+						path='/courses'
+						element={
+							<Courses coursesList={coursesList} authorsList={authorsList} />
+						}
+					/>
+					<Route
+						path='/createCourses'
+						element={
+							<CreateCourse
+								addAuthor={addAuthor}
+								addCourse={addCourse}
+								authorsList={authorsList}
+							/>
+						}
+					/>
+				</Routes>
+			</Router>
 		</div>
 	);
 }

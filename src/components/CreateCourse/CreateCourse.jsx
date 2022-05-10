@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import {
 	BTN_CREATE_COURSE,
@@ -6,13 +7,14 @@ import {
 	BTN_ADD_AUTHOR,
 	BTN_DEL_AUTHOR,
 } from '../../constants';
-import Button from '../../common/Button/Button.jsx';
-import Input from '../../common/Input/Input.jsx';
+import Header from '../Header/Header';
+import Button from '../../common/Button/Button';
+import Input from '../../common/Input/Input';
 import './createCourse.css';
 import dateGenerator from '../../helpers/dateGenerator';
 import pipeDuration from '../../helpers/pipeDuration';
 
-function CreateCourse({ showCreate, authorsList, addAuthor, addCourse }) {
+function CreateCourse({ authorsList, addAuthor, addCourse }) {
 	const [title, setTitle] = useState('');
 	const [authors, setAuthors] = useState(authorsList);
 	const [authorCourse, setAuthorCourse] = useState('');
@@ -21,10 +23,11 @@ function CreateCourse({ showCreate, authorsList, addAuthor, addCourse }) {
 	const [duration, setDuration] = useState('');
 	const [checkTextArea, setCheckTextArea] = useState('');
 	const [checkAuthor, setCheckAuthor] = useState('');
+	let navigate = useNavigate();
 
 	useEffect(() => {
 		setAuthors(authors);
-	}, [authors, authorsList]);
+	}, [authors]);
 
 	const handleCreate = (e) => {
 		e.preventDefault();
@@ -47,7 +50,7 @@ function CreateCourse({ showCreate, authorsList, addAuthor, addCourse }) {
 				duration,
 				authors,
 			});
-			showCreate(false);
+			navigate('/courses');
 		}
 	};
 
@@ -83,99 +86,102 @@ function CreateCourse({ showCreate, authorsList, addAuthor, addCourse }) {
 	}
 
 	return (
-		<div className='createCourse'>
-			<form className='form-create'>
-				<label>Title</label>
-				<div className='form-wrap'>
-					<Input
-						minLength='2'
-						type='text'
-						placeholder='Enter title...'
-						value={title}
-						onChange={(e) => setTitle(e.target.value)}
-					/>
-					<Button
-						type='submit'
-						className='btn-create'
-						text={BTN_CREATE_COURSE}
-						onClick={handleCreate}
-					/>
-				</div>
-				<label>Description</label>
-				<textarea
-					type='text'
-					value={description}
-					placeholder='Enter description'
-					onChange={(e) => setDescription(e.target.value)}
-				/>
-				<span className='validate'>{checkTextArea}</span>
-				<div className='authors-wrap'>
-					<div className='author-create'>
-						<h4 className='author-title'>Add author</h4>
-						<label>Author name</label>
+		<>
+			<Header />
+			<div className='createCourse'>
+				<form className='form-create'>
+					<label>Title</label>
+					<div className='form-wrap'>
 						<Input
+							minLength='2'
 							type='text'
-							placeholder='Enter author name...'
-							value={valueAuthor}
-							onChange={(e) => setAuthor(e.target.value)}
+							placeholder='Enter title...'
+							value={title}
+							onChange={(e) => setTitle(e.target.value)}
 						/>
-						<span className='validate'>{checkAuthor}</span>
 						<Button
+							type='submit'
 							className='btn-create'
-							text={BTN_CREATE_AUTHOR}
-							onClick={(e) => authorNameAdd(e)}
+							text={BTN_CREATE_COURSE}
+							onClick={handleCreate}
 						/>
-						<h4 className='duration-title'>Duration</h4>
-						<label>Duration</label>
-						<Input
-							type='number'
-							min='1'
-							placeholder='Enter duration in minutes...'
-							value={duration}
-							onChange={(e) => setDuration(e.target.value)}
-						/>
-						<span className='info-duration'>
-							Duration: <b>{pipeDuration(duration)}</b> hours
-						</span>
 					</div>
-					<div className='authors'>
-						<h4 className='author-title'>Authors</h4>
-						<p className='info'>
-							{[...authors].map((item) => (
-								<span key={item['id']} className='author-item'>
-									{' '}
-									{item['name']}
-									<Button
-										id={item['id']}
-										className='btn-add'
-										text={BTN_ADD_AUTHOR}
-										onClick={(e) => addCourseAuthor(e)}
-									/>
-								</span>
-							))}
-						</p>
-						<div className='author-title'>Course authors</div>
-						<div className='author-title'>
-							{authorCourse.length === 0 ? 'Author list is empty' : ''}
+					<label>Description</label>
+					<textarea
+						type='text'
+						value={description}
+						placeholder='Enter description'
+						onChange={(e) => setDescription(e.target.value)}
+					/>
+					<span className='validate'>{checkTextArea}</span>
+					<div className='authors-wrap'>
+						<div className='author-create'>
+							<h4 className='author-title'>Add author</h4>
+							<label>Author name</label>
+							<Input
+								type='text'
+								placeholder='Enter author name...'
+								value={valueAuthor}
+								onChange={(e) => setAuthor(e.target.value)}
+							/>
+							<span className='validate'>{checkAuthor}</span>
+							<Button
+								className='btn-create'
+								text={BTN_CREATE_AUTHOR}
+								onClick={(e) => authorNameAdd(e)}
+							/>
+							<h4 className='duration-title'>Duration</h4>
+							<label>Duration</label>
+							<Input
+								type='number'
+								min='1'
+								placeholder='Enter duration in minutes...'
+								value={duration}
+								onChange={(e) => setDuration(e.target.value)}
+							/>
+							<span className='info-duration'>
+								Duration: <b>{pipeDuration(duration)}</b> hours
+							</span>
 						</div>
-						<p className='info'>
-							{[...authorCourse].map((item) => (
-								<span key={item['id']} className='author-item authors-course'>
-									{' '}
-									{item['name']}
-									<Button
-										id={item['id']}
-										className='btn-add'
-										text={BTN_DEL_AUTHOR}
-										onClick={(e) => delCourseAuthor(e)}
-									/>
-								</span>
-							))}
-						</p>
+						<div className='authors'>
+							<h4 className='author-title'>Authors</h4>
+							<p className='info'>
+								{authors.map((item) => (
+									<span key={item['id']} className='author-item'>
+										{' '}
+										{item['name']}
+										<Button
+											id={item['id']}
+											className='btn-add'
+											text={BTN_ADD_AUTHOR}
+											onClick={(e) => addCourseAuthor(e)}
+										/>
+									</span>
+								))}
+							</p>
+							<div className='author-title'>Course authors</div>
+							<div className='author-title'>
+								{authorCourse.length === 0 ? 'Author list is empty' : ''}
+							</div>
+							<p className='info'>
+								{[...authorCourse].map((item) => (
+									<span key={item['id']} className='author-item authors-course'>
+										{' '}
+										{item['name']}
+										<Button
+											id={item['id']}
+											className='btn-add'
+											text={BTN_DEL_AUTHOR}
+											onClick={(e) => delCourseAuthor(e)}
+										/>
+									</span>
+								))}
+							</p>
+						</div>
 					</div>
-				</div>
-			</form>
-		</div>
+				</form>
+			</div>
+		</>
 	);
 }
 

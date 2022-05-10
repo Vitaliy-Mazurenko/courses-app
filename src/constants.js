@@ -69,3 +69,5 @@ export const BTN_CREATE_AUTHOR = 'Create author';
 export const BTN_ADD_AUTHOR = 'Add author';
 
 export const BTN_DEL_AUTHOR = 'Delete author';
+
+export const BUTTON_LOGIN = 'Login';
