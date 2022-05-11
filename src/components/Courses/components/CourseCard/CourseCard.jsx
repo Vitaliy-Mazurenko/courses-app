@@ -1,10 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BUTTON_SHOW } from '../../../../constants';
 import Button from '../../../../common/Button/Button.jsx';
 import './courseCard.css';
 import pipeDuration from '../../../../helpers/pipeDuration';
 
 const CourseCard = ({ course, authorsList }) => {
+	let navigate = useNavigate();
 	function formDate(iDate) {
 		if (iDate < 10) {
 			return '0' + iDate;
@@ -13,9 +15,13 @@ const CourseCard = ({ course, authorsList }) => {
 		}
 	}
 
+	const showCourse = (e) => {
+		navigate(`/courses/${e.target.id}`);
+	};
+
 	return (
 		<>
-			<div className='courseCard'>
+			<div className='courseCard' key={course['id']}>
 				<div className='courseDescription'>
 					<h2 className='title'>{course.title}</h2>
 					<div className='description'>{course.description}</div>
@@ -46,7 +52,11 @@ const CourseCard = ({ course, authorsList }) => {
 								.replace(new RegExp(',', 'g'), '.')}
 						</span>
 					</p>
-					<Button text={BUTTON_SHOW} />
+					<Button
+						id={course['id']}
+						onClick={(e) => showCourse(e)}
+						text={BUTTON_SHOW}
+					/>
 				</div>
 			</div>
 		</>

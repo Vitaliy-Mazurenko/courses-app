@@ -1,12 +1,11 @@
 import './registration.css';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Header from '../Header/Header';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import { BUTTON_LOGIN } from '../../constants';
 
-export default function Registration() {
+export default function Registration({ addName }) {
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -14,12 +13,12 @@ export default function Registration() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		addName(name, email);
 		navigate('/courses');
 	};
 
 	return (
 		<>
-			<Header />
 			<div className='registration'>
 				<div className='registration-wrap'>
 					<h2>Registration</h2>

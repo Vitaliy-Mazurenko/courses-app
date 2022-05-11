@@ -15,7 +15,7 @@ export default function SearchBar({ valChange }) {
 		setValue('');
 	};
 	const createCourse = () => {
-		navigate('/createCourses');
+		navigate('/courses/add');
 	};
 
 	return (

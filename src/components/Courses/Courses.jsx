@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import Header from '../Header/Header';
 import CourseCard from './components/CourseCard/CourseCard';
 import SearchBar from './components/SearchBar/SearchBar';
 import './courses.css';
 
-export default function Courses({ showCreate, coursesList, authorsList }) {
+export default function Courses({ coursesList, authorsList }) {
 	const [courses, setCourse] = useState(coursesList);
 
 	const valChange = (val) => {
@@ -27,9 +26,8 @@ export default function Courses({ showCreate, coursesList, authorsList }) {
 
 	return (
 		<>
-			<Header />
 			<div className='Courses'>
-				<SearchBar valChange={valChange} showCreate={showCreate} />
+				<SearchBar valChange={valChange} />
 				{courses.map((course) => (
 					<div key={course.id}>
 						<CourseCard course={course} authorsList={authorsList} />

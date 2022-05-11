@@ -1,0 +1,46 @@
+.courseInformation {
+  border: 2px solid #85C9E9;
+  margin: 1% 1%;
+  align-items: center;
+}
+.courseInformation a{
+  color: black;
+}
+
+.courseInformation{
+  padding: 1% 2% 1% 1%;
+}
+
+.courseInformation .title{
+  margin: 2.5%;
+  text-align: center;
+}
+
+.descInformation{
+  display: flex;
+}
+
+.descInformation .description{
+  width: 65%;
+  padding: 15px;
+}
+
+.about{
+  padding: 1.5% 1%;
+}
+.information {
+  font-size: 1.03em;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  font-weight: bold;
+  overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+max-width: 296px;
+}
+
+.authorId span{
+  font-weight: normal;
+  margin-top: 15px;
+  display: block;
+}

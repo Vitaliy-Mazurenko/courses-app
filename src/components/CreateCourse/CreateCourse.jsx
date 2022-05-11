@@ -7,7 +7,6 @@ import {
 	BTN_ADD_AUTHOR,
 	BTN_DEL_AUTHOR,
 } from '../../constants';
-import Header from '../Header/Header';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import './createCourse.css';
@@ -87,7 +86,6 @@ function CreateCourse({ authorsList, addAuthor, addCourse }) {
 
 	return (
 		<>
-			<Header />
 			<div className='createCourse'>
 				<form className='form-create'>
 					<label>Title</label>

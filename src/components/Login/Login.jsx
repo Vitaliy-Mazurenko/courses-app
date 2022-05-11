@@ -1,7 +1,6 @@
 import './login.css';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Header from '../Header/Header';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import { BUTTON_LOGIN } from '../../constants';
@@ -18,7 +17,6 @@ export default function Login() {
 
 	return (
 		<>
-			<Header />
 			<div className='login'>
 				<div className='login-wrap'>
 					<h2>Login</h2>
