@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+	BrowserRouter as Router,
+	Routes,
+	Route,
+	Navigate,
+} from 'react-router-dom';
 import { mockedCoursesList, mockedAuthorsList } from './constants';
 import Login from './components/Login/Login';
 import Header from './components/Header/Header';
@@ -12,8 +17,7 @@ import './App.css';
 function App() {
 	const [coursesList, setCourse] = useState([...mockedCoursesList]);
 	const [authorsList, setAuthorsList] = useState([...mockedAuthorsList]);
-	const [userName, setName] = useState('');
-	const [userEmail, setEmail] = useState('');
+	const [name, setUser] = useState('');
 
 	const addAuthor = (newAuthor) => {
 		setAuthorsList([...authorsList, newAuthor]);
@@ -23,21 +27,18 @@ function App() {
 		setCourse([...coursesList, newCourse]);
 	};
 
-	const addName = (name, email) => {
-		setName(name);
-		setEmail(email);
+	const addUser = (name) => {
+		setUser(name);
 	};
 
 	return (
 		<div className='App'>
 			<Router>
-				<Header userName={userName} userEmail={userEmail} />
+				<Header userName={name} />
 				<Routes>
-					<Route exact path='/' element={<Login />} />
-					<Route
-						path='/registration'
-						element={<Registration addName={addName} />}
-					/>
+					<Route path='/login' element={<Login addUser={addUser} />} />
+					<Route path='/' element={<Navigate replace to='/login' />} />
+					<Route path='/registration' element={<Registration />} />
 					<Route
 						path='/courses'
 						element={

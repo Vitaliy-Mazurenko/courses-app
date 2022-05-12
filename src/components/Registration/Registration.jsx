@@ -5,16 +5,33 @@ import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import { BUTTON_LOGIN } from '../../constants';
 
-export default function Registration({ addName }) {
+export default function Registration() {
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	let navigate = useNavigate();
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		addName(name, email);
-		navigate('/courses');
+		navigate('/login');
+		const newUser = {
+			name,
+			password,
+			email,
+		};
+		const response = await fetch('http://localhost:4000/register', {
+			method: 'POST',
+			body: JSON.stringify(newUser),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+			.then((response) => response.json())
+			.then((data) => console.log(data))
+			.catch((error) => {
+				console.error('Error:', error);
+			});
+		console.log(response);
 	};
 
 	return (
@@ -50,7 +67,7 @@ export default function Registration({ addName }) {
 						<Button text={BUTTON_LOGIN} />
 					</form>
 					<div className='account'>
-						If you have an account you can <Link to='/'>Login</Link>
+						If you have an account you can <Link to='/login'>Login</Link>
 					</div>
 				</div>
 			</div>
