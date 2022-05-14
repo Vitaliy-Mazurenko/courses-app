@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import CourseCard from './components/CourseCard/CourseCard';
 import SearchBar from './components/SearchBar/SearchBar';
 import './courses.css';
@@ -37,3 +38,8 @@ export default function Courses({ coursesList, authorsList }) {
 		</>
 	);
 }
+
+Courses.propTypes = {
+	coursesList: PropTypes.array,
+	authorsList: PropTypes.array,
+};

@@ -17,7 +17,8 @@ import './App.css';
 function App() {
 	const [coursesList, setCourse] = useState([...mockedCoursesList]);
 	const [authorsList, setAuthorsList] = useState([...mockedAuthorsList]);
-	const [name, setUser] = useState('');
+	const [name, setUser] = useState(localStorage.getItem('name'));
+	const [token, setToken] = useState(localStorage.getItem('token'));
 
 	const addAuthor = (newAuthor) => {
 		setAuthorsList([...authorsList, newAuthor]);
@@ -27,32 +28,48 @@ function App() {
 		setCourse([...coursesList, newCourse]);
 	};
 
-	const addUser = (name) => {
-		setUser(name);
+	const addUser = (result, user) => {
+		setUser(user);
+		setToken(result);
+		localStorage.setItem('token', result);
+		localStorage.setItem('name', user);
 	};
 
 	return (
 		<div className='App'>
 			<Router>
-				<Header userName={name} />
+				<Header user={name} addUser={addUser} />
 				<Routes>
-					<Route path='/login' element={<Login addUser={addUser} />} />
 					<Route path='/' element={<Navigate replace to='/login' />} />
+					<Route
+						path='/login'
+						element={
+							token ? <Navigate to='/courses' /> : <Login addUser={addUser} />
+						}
+					/>
 					<Route path='/registration' element={<Registration />} />
 					<Route
 						path='/courses'
 						element={
-							<Courses coursesList={coursesList} authorsList={authorsList} />
+							token ? (
+								<Courses coursesList={coursesList} authorsList={authorsList} />
+							) : (
+								<Navigate replace to='/login' />
+							)
 						}
 					/>
 					<Route
 						path='/courses/add'
 						element={
-							<CreateCourse
-								addAuthor={addAuthor}
-								addCourse={addCourse}
-								authorsList={authorsList}
-							/>
+							token ? (
+								<CreateCourse
+									addAuthor={addAuthor}
+									addCourse={addCourse}
+									authorsList={authorsList}
+								/>
+							) : (
+								<Navigate replace to='/login' />
+							)
 						}
 					/>
 					<Route

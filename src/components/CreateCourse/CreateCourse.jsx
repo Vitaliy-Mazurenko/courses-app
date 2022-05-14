@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
+import PropTypes from 'prop-types';
 import {
 	BTN_CREATE_COURSE,
 	BTN_CREATE_AUTHOR,
@@ -184,3 +185,9 @@ function CreateCourse({ authorsList, addAuthor, addCourse }) {
 }
 
 export default CreateCourse;
+
+CreateCourse.propTypes = {
+	authorsList: PropTypes.array,
+	addAuthor: PropTypes.func,
+	addCourse: PropTypes.func,
+};

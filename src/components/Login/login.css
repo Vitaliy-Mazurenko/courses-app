@@ -30,3 +30,9 @@
   border-color: #C99CEA;
   padding: 4px 45px;
 }
+
+.login-err{
+  display: block;
+  color: red;
+  font-size: 12px;
+}

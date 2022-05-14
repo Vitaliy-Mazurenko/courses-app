@@ -9,29 +9,35 @@ export default function Registration() {
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [error, setError] = useState('');
+	const URL = 'http://localhost:4000/register';
 	let navigate = useNavigate();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		navigate('/login');
 		const newUser = {
 			name,
 			password,
 			email,
 		};
-		const response = await fetch('http://localhost:4000/register', {
+
+		const response = await fetch(URL, {
 			method: 'POST',
 			body: JSON.stringify(newUser),
 			headers: {
 				'Content-Type': 'application/json',
 			},
-		})
-			.then((response) => response.json())
-			.then((data) => console.log(data))
-			.catch((error) => {
-				console.error('Error:', error);
-			});
-		console.log(response);
+		}).catch((error) => {
+			console.warn(error.message);
+			setError(error.message);
+		});
+
+		const result = await response.json();
+		if (response.ok) {
+			navigate('/login');
+		} else {
+			setError(result.errors.toString());
+		}
 	};
 
 	return (
@@ -42,7 +48,7 @@ export default function Registration() {
 					<form onSubmit={handleSubmit} className='form-registration'>
 						<label>Name</label>
 						<Input
-							minLength='2'
+							required
 							type='text'
 							placeholder='Enter name'
 							value={name}
@@ -50,7 +56,7 @@ export default function Registration() {
 						/>
 						<label>Email</label>
 						<Input
-							minLength='2'
+							required
 							type='text'
 							placeholder='Enter email'
 							value={email}
@@ -58,12 +64,13 @@ export default function Registration() {
 						/>
 						<label>Password</label>
 						<Input
-							minLength='2'
-							type='text'
+							required
+							type='password'
 							placeholder='Enter password'
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
 						/>
+						<span className='login-err'>{error}</span>
 						<Button text={BUTTON_LOGIN} />
 					</form>
 					<div className='account'>

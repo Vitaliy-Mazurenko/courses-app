@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { BUTTON_SHOW } from '../../../../constants';
 import Button from '../../../../common/Button/Button.jsx';
 import './courseCard.css';
@@ -64,3 +65,8 @@ const CourseCard = ({ course, authorsList }) => {
 };
 
 export default CourseCard;
+
+CourseCard.propTypes = {
+	course: PropTypes.object,
+	authorsList: PropTypes.array,
+};
