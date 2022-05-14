@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
-import { BUTTON_LOGIN } from '../../constants';
+import { BUTTON_REG } from '../../constants';
 
 export default function Registration() {
 	const [name, setName] = useState('');
@@ -71,7 +71,7 @@ export default function Registration() {
 							onChange={(e) => setPassword(e.target.value)}
 						/>
 						<span className='login-err'>{error}</span>
-						<Button text={BUTTON_LOGIN} />
+						<Button text={BUTTON_REG} />
 					</form>
 					<div className='account'>
 						If you have an account you can <Link to='/login'>Login</Link>
