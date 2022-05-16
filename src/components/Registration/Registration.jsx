@@ -21,23 +21,25 @@ export default function Registration() {
 			email,
 		};
 
-		const response = await fetch(URL, {
+		return await fetch(URL, {
 			method: 'POST',
 			body: JSON.stringify(newUser),
 			headers: {
 				'Content-Type': 'application/json',
 			},
-		}).catch((error) => {
-			console.warn(error.message);
-			setError(error.message);
-		});
-
-		const result = await response.json();
-		if (response.ok) {
-			navigate('/login');
-		} else {
-			setError(result.errors.toString());
-		}
+		})
+			.then((response) => response.json())
+			.then((json) => {
+				if (json.successful) {
+					navigate('/login');
+				} else {
+					setError(json.errors.toString());
+				}
+			})
+			.catch((error) => {
+				console.warn(error.message);
+				setError(error.message);
+			});
 	};
 
 	return (

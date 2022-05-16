@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	BrowserRouter as Router,
 	Routes,
 	Route,
 	Navigate,
 } from 'react-router-dom';
-import { mockedCoursesList, mockedAuthorsList } from './constants';
+import { getCoursesList, getAuthorsList } from './services';
 import Login from './components/Login/Login';
 import Header from './components/Header/Header';
 import Registration from './components/Registration/Registration';
@@ -15,10 +15,26 @@ import CourseInfo from './components/CourseInfo/CourseInfo';
 import './App.css';
 
 function App() {
-	const [coursesList, setCourse] = useState([...mockedCoursesList]);
-	const [authorsList, setAuthorsList] = useState([...mockedAuthorsList]);
+	const [coursesList, setCourse] = useState([]);
+	const [authorsList, setAuthorsList] = useState([]);
 	const [name, setUser] = useState(localStorage.getItem('name'));
 	const [token, setToken] = useState(localStorage.getItem('token'));
+
+	console.log(coursesList);
+	console.log(authorsList);
+	useEffect(() => {
+		(async () => {
+			try {
+				setCourse(await getCoursesList());
+			} catch (err) {
+				console.error(err);
+			}
+		})();
+
+		getAuthorsList().then((data) => {
+			setAuthorsList(data.result);
+		});
+	}, []);
 
 	const addAuthor = (newAuthor) => {
 		setAuthorsList([...authorsList, newAuthor]);

@@ -26,11 +26,15 @@ export default function Login({ addUser }) {
 			setError(error.message);
 		});
 
-		if (response.ok) {
+		if (response) {
 			const result = await response.json();
-			addUser(result.result, result.user.name);
-		} else {
-			setError('Invalid data');
+			if (response.ok) {
+				addUser(result.result, result.user.name);
+			} else if (result.result) {
+				setError(result.result);
+			} else {
+				setError(result.errors);
+			}
 		}
 	};
 
