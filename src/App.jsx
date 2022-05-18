@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
 	BrowserRouter as Router,
 	Routes,
 	Route,
 	Navigate,
 } from 'react-router-dom';
-import { getCoursesList, getAuthorsList } from './services';
 import Login from './components/Login/Login';
 import Header from './components/Header/Header';
 import Registration from './components/Registration/Registration';
@@ -15,34 +14,8 @@ import CourseInfo from './components/CourseInfo/CourseInfo';
 import './App.css';
 
 function App() {
-	const [coursesList, setCourse] = useState([]);
-	const [authorsList, setAuthorsList] = useState([]);
 	const [name, setUser] = useState(localStorage.getItem('name'));
 	const [token, setToken] = useState(localStorage.getItem('token'));
-
-	console.log(coursesList);
-	console.log(authorsList);
-	useEffect(() => {
-		(async () => {
-			try {
-				setCourse(await getCoursesList());
-			} catch (err) {
-				console.error(err);
-			}
-		})();
-
-		getAuthorsList().then((data) => {
-			setAuthorsList(data.result);
-		});
-	}, []);
-
-	const addAuthor = (newAuthor) => {
-		setAuthorsList([...authorsList, newAuthor]);
-	};
-
-	const addCourse = (newCourse) => {
-		setCourse([...coursesList, newCourse]);
-	};
 
 	const addUser = (result, user) => {
 		setUser(user);
@@ -66,35 +39,15 @@ function App() {
 					<Route path='/registration' element={<Registration />} />
 					<Route
 						path='/courses'
-						element={
-							token ? (
-								<Courses coursesList={coursesList} authorsList={authorsList} />
-							) : (
-								<Navigate replace to='/login' />
-							)
-						}
+						element={token ? <Courses /> : <Navigate replace to='/login' />}
 					/>
 					<Route
 						path='/courses/add'
 						element={
-							token ? (
-								<CreateCourse
-									addAuthor={addAuthor}
-									addCourse={addCourse}
-									authorsList={authorsList}
-								/>
-							) : (
-								<Navigate replace to='/login' />
-							)
+							token ? <CreateCourse /> : <Navigate replace to='/login' />
 						}
 					/>
-					<Route
-						exact
-						path='/courses/:id'
-						element={
-							<CourseInfo coursesList={coursesList} authorsList={authorsList} />
-						}
-					/>
+					<Route exact path='/courses/:id' element={<CourseInfo />} />
 				</Routes>
 			</Router>
 		</div>

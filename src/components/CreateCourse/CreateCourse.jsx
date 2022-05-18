@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import {
 	BTN_CREATE_COURSE,
 	BTN_CREATE_AUTHOR,
@@ -14,9 +15,12 @@ import './createCourse.css';
 import dateGenerator from '../../helpers/dateGenerator';
 import pipeDuration from '../../helpers/pipeDuration';
 
-function CreateCourse({ authorsList, addAuthor, addCourse }) {
+function CreateCourse() {
 	const [title, setTitle] = useState('');
+	const authorsList = useSelector((state) => state.author.authors);
 	const [authors, setAuthors] = useState(authorsList);
+	const coursesList = useSelector((state) => state.course.courses);
+	const [course, setCourse] = useState(coursesList);
 	const [authorCourse, setAuthorCourse] = useState('');
 	const [valueAuthor, setAuthor] = useState('');
 	const [description, setDescription] = useState('');
@@ -28,6 +32,14 @@ function CreateCourse({ authorsList, addAuthor, addCourse }) {
 	useEffect(() => {
 		setAuthors(authors);
 	}, [authors]);
+
+	const addAuthor = (newAuthor) => {
+		setAuthors([...authorsList, newAuthor]);
+	};
+
+	const addCourse = (newCourse) => {
+		setCourse([...course, newCourse]);
+	};
 
 	const handleCreate = (e) => {
 		e.preventDefault();
@@ -158,7 +170,7 @@ function CreateCourse({ authorsList, addAuthor, addCourse }) {
 									</span>
 								))}
 							</p>
-							<div className='author-title'>Course authors</div>
+							<h4 className='author-title'>Course authors</h4>
 							<div className='author-title'>
 								{authorCourse.length === 0 ? 'Author list is empty' : ''}
 							</div>

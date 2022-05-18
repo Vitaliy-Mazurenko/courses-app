@@ -1,11 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCoursesList, getAuthorsList } from '../../services';
 import CourseCard from './components/CourseCard/CourseCard';
 import SearchBar from './components/SearchBar/SearchBar';
 import './courses.css';
 
-export default function Courses({ coursesList, authorsList }) {
+export default function Courses() {
+	const coursesList = useSelector((state) => state.course.courses);
+	const authorsList = useSelector((state) => state.author.authors);
 	const [courses, setCourse] = useState(coursesList);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(getCoursesList());
+		dispatch(getAuthorsList());
+		setCourse(courses);
+	}, [dispatch, courses]);
 
 	const valChange = (val) => {
 		let idx = [];

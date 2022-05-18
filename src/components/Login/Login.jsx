@@ -46,7 +46,7 @@ export default function Login({ addUser }) {
 					<label>Email</label>
 					<Input
 						required
-						type='text'
+						type='email'
 						placeholder='Enter email'
 						onChange={(e) => setEmail(e.target.value)}
 					/>

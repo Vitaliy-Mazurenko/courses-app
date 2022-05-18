@@ -1,10 +1,13 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import pipeDuration from '../../helpers/pipeDuration';
 import './courseInfo.css';
 
-export default function CourseInfo({ coursesList, authorsList }) {
+export default function CourseInfo() {
 	const params = useParams();
+	const authorsList = useSelector((state) => state.author.authors);
+	const coursesList = useSelector((state) => state.course.courses);
 	const cours = coursesList
 		.filter((course) => course.id.includes(params.id))
 		.shift();

@@ -59,7 +59,7 @@ export default function Registration() {
 						<label>Email</label>
 						<Input
 							required
-							type='text'
+							type='email'
 							placeholder='Enter email'
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
