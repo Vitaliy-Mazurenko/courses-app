@@ -1,17 +1,20 @@
-const SET_AUTHORS = 'SET_AUTHORS';
+import * as actions from './actionTypes';
 
-const defaultState = {
+const authorsInitialState = {
 	authors: [],
-	isFetching: true,
 };
 
-export default function authorsReducer(state = defaultState, action) {
+export default function authorsReducer(state = authorsInitialState, action) {
 	switch (action.type) {
-		case SET_AUTHORS:
+		case actions.SET_AUTHORS:
 			return { ...state, authors: action.payload };
+		case actions.ADD_AUTHORS:
+			return { ...state, authors: [...state.authors, action.payload] };
 		default:
 			return state;
 	}
 }
 
-export const setAuthors = (payload) => ({ type: SET_AUTHORS, payload });
+export const setAuthors = (payload) => ({ type: actions.SET_AUTHORS, payload });
+
+export const addAuthors = (payload) => ({ type: actions.ADD_AUTHORS, payload });

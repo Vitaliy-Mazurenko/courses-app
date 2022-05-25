@@ -1,17 +1,20 @@
-const SET_COURSES = 'SET_COURSES';
+import * as actions from './actionTypes';
 
-const defaultState = {
+const coursesInitialState = {
 	courses: [],
-	isFetching: true,
 };
 
-export default function coursesReducer(state = defaultState, action) {
+export default function coursesReducer(state = coursesInitialState, action) {
 	switch (action.type) {
-		case SET_COURSES:
+		case actions.SET_COURSES:
 			return { ...state, courses: action.payload };
+		case actions.ADD_COURSES:
+			return { ...state, courses: [...state.courses, action.payload] };
 		default:
 			return state;
 	}
 }
 
-export const setCourses = (payload) => ({ type: SET_COURSES, payload });
+export const setCourses = (payload) => ({ type: actions.SET_COURSES, payload });
+
+export const addCourses = (payload) => ({ type: actions.ADD_COURSES, payload });

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { addCourses } from '../../store/courses/reducer';
+import { addAuthors } from '../../store/authors/reducer';
 import {
 	BTN_CREATE_COURSE,
 	BTN_CREATE_AUTHOR,
@@ -19,8 +21,6 @@ function CreateCourse() {
 	const [title, setTitle] = useState('');
 	const authorsList = useSelector((state) => state.author.authors);
 	const [authors, setAuthors] = useState(authorsList);
-	const coursesList = useSelector((state) => state.course.courses);
-	const [course, setCourse] = useState(coursesList);
 	const [authorCourse, setAuthorCourse] = useState('');
 	const [valueAuthor, setAuthor] = useState('');
 	const [description, setDescription] = useState('');
@@ -28,17 +28,18 @@ function CreateCourse() {
 	const [checkTextArea, setCheckTextArea] = useState('');
 	const [checkAuthor, setCheckAuthor] = useState('');
 	let navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		setAuthors(authors);
-	}, [authors]);
+	}, [dispatch, authors]);
 
 	const addAuthor = (newAuthor) => {
-		setAuthors([...authorsList, newAuthor]);
+		dispatch(addAuthors(newAuthor));
 	};
 
 	const addCourse = (newCourse) => {
-		setCourse([...course, newCourse]);
+		dispatch(addCourses(newCourse));
 	};
 
 	const handleCreate = (e) => {
@@ -55,12 +56,12 @@ function CreateCourse() {
 				authors.push(i.id);
 			}
 			addCourse({
-				id: uuid(),
 				title,
 				description,
 				creationDate,
 				duration,
 				authors,
+				id: uuid(),
 			});
 			navigate('/courses');
 		}
@@ -71,7 +72,7 @@ function CreateCourse() {
 		if (valueAuthor.length < 2) {
 			setCheckAuthor('author name length should be at least 2 characters');
 		} else {
-			const newAuthor = { id: uuid(), name: valueAuthor };
+			const newAuthor = { name: valueAuthor, id: uuid() };
 			addAuthor(newAuthor);
 			setCheckAuthor('');
 			setAuthors([...authors, newAuthor]);
@@ -197,7 +198,6 @@ function CreateCourse() {
 }
 
 export default CreateCourse;
-
 CreateCourse.propTypes = {
 	authorsList: PropTypes.array,
 	addAuthor: PropTypes.func,

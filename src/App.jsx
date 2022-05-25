@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	BrowserRouter as Router,
 	Routes,
@@ -11,30 +11,36 @@ import Registration from './components/Registration/Registration';
 import Courses from './components/Courses/Courses';
 import CreateCourse from './components/CreateCourse/CreateCourse';
 import CourseInfo from './components/CourseInfo/CourseInfo';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUser } from './store/user/reducer';
 import './App.css';
 
 function App() {
-	const [name, setUser] = useState(localStorage.getItem('name'));
 	const [token, setToken] = useState(localStorage.getItem('token'));
+	const userToken = useSelector((state) => state.user.token);
+	const dispatch = useDispatch();
 
-	const addUser = (result, user) => {
-		setUser(user);
-		setToken(result);
-		localStorage.setItem('token', result);
-		localStorage.setItem('name', user);
-	};
+	useEffect(() => {
+		const localToken = localStorage.getItem('token');
+		const name = localStorage.getItem('name');
+		if (!userToken && localToken) {
+			let email = 'email';
+			dispatch(getUser(name, email, localToken));
+			setToken(localStorage.getItem('token'));
+		} else {
+			setToken(userToken);
+		}
+	}, [userToken, dispatch]);
 
 	return (
 		<div className='App'>
 			<Router>
-				<Header user={name} addUser={addUser} />
+				<Header />
 				<Routes>
 					<Route path='/' element={<Navigate replace to='/login' />} />
 					<Route
 						path='/login'
-						element={
-							token ? <Navigate to='/courses' /> : <Login addUser={addUser} />
-						}
+						element={token ? <Navigate to='/courses' /> : <Login />}
 					/>
 					<Route path='/registration' element={<Registration />} />
 					<Route

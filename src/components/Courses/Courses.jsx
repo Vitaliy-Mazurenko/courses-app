@@ -5,18 +5,31 @@ import { getCoursesList, getAuthorsList } from '../../services';
 import CourseCard from './components/CourseCard/CourseCard';
 import SearchBar from './components/SearchBar/SearchBar';
 import './courses.css';
-
-export default function Courses() {
-	const coursesList = useSelector((state) => state.course.courses);
+import * as actions from '../../store/courses/actionCreators';
+import { connect } from 'react-redux';
+function Courses({ coursesList }) {
+	const dispatch = useDispatch();
+	// const coursesList = useSelector((state) => state.course.courses);
 	const authorsList = useSelector((state) => state.author.authors);
 	const [courses, setCourse] = useState(coursesList);
-	const dispatch = useDispatch();
+	// console.log(coursesList);
 
 	useEffect(() => {
-		dispatch(getCoursesList());
-		dispatch(getAuthorsList());
-		setCourse(courses);
-	}, [dispatch, courses]);
+		if (!!courses.length) {
+			setCourse(courses);
+		}
+	}, [courses]);
+
+	useEffect(() => {
+		if (!coursesList.length) {
+			dispatch(getCoursesList());
+		} else {
+			setCourse(coursesList);
+		}
+		if (!authorsList.length) {
+			dispatch(getAuthorsList());
+		}
+	}, [coursesList, authorsList, dispatch]);
 
 	const valChange = (val) => {
 		let idx = [];
@@ -49,6 +62,12 @@ export default function Courses() {
 		</>
 	);
 }
+
+const mapStateToProps = (state) => ({
+	coursesList: state.course.courses,
+});
+
+export default connect(mapStateToProps, actions)(Courses);
 
 Courses.propTypes = {
 	coursesList: PropTypes.array,

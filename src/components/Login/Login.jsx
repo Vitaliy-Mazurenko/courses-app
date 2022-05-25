@@ -4,13 +4,18 @@ import { Link } from 'react-router-dom';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import { BUTTON_LOGIN } from '../../constants';
+import { useDispatch } from 'react-redux';
+import { getUser } from '../../store/user/reducer';
+import { useNavigate } from 'react-router-dom';
 
-export default function Login({ addUser }) {
+export default function Login() {
 	const URL = 'http://localhost:4000/login';
 	const [email, setEmail] = useState();
 	const [password, setPassword] = useState();
 	const [error, setError] = useState('');
 	const user = { email, password };
+	const dispatch = useDispatch();
+	let navigate = useNavigate();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -29,7 +34,10 @@ export default function Login({ addUser }) {
 		if (response) {
 			const result = await response.json();
 			if (response.ok) {
-				addUser(result.result, result.user.name);
+				dispatch(getUser(result.user.name, result.user.email, result.result));
+				localStorage.setItem('token', result.result);
+				localStorage.setItem('name', result.user.name);
+				navigate('/courses/');
 			} else if (result.result) {
 				setError(result.result);
 			} else {
