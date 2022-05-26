@@ -9,7 +9,6 @@ import { delUser } from '../../store/user/reducer';
 
 export default function Header() {
 	const name = localStorage.getItem('name');
-	// const userAuth = useSelector((state) => state.user);
 	const dispatch = useDispatch();
 	let navigate = useNavigate();
 	const logOut = () => {

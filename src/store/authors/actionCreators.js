@@ -1,3 +1,3 @@
 import * as actions from './actionTypes';
-export const set = () => ({ type: actions.SET_AUTHORS });
-export const add = () => ({ type: actions.ADD_AUTHORS });
+export const setAUTHOR = () => ({ type: actions.SET_AUTHORS });
+export const addAUTHOR = () => ({ type: actions.ADD_AUTHORS });
