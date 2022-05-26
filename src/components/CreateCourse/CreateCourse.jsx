@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
-import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCourses } from '../../store/courses/reducer';
 import { addAuthors } from '../../store/authors/reducer';
+import { getAuthors } from '../../selectors';
 import {
 	BTN_CREATE_COURSE,
 	BTN_CREATE_AUTHOR,
@@ -13,13 +13,13 @@ import {
 } from '../../constants';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
-import './createCourse.css';
 import dateGenerator from '../../helpers/dateGenerator';
 import pipeDuration from '../../helpers/pipeDuration';
+import './createCourse.css';
 
 function CreateCourse() {
 	const [title, setTitle] = useState('');
-	const authorsList = useSelector((state) => state.author.authors);
+	const authorsList = useSelector(getAuthors);
 	const [authors, setAuthors] = useState(authorsList);
 	const [authorCourse, setAuthorCourse] = useState('');
 	const [valueAuthor, setAuthor] = useState('');
@@ -198,8 +198,3 @@ function CreateCourse() {
 }
 
 export default CreateCourse;
-CreateCourse.propTypes = {
-	authorsList: PropTypes.array,
-	addAuthor: PropTypes.func,
-	addCourse: PropTypes.func,
-};

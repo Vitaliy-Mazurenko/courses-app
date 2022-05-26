@@ -13,11 +13,12 @@ import CreateCourse from './components/CreateCourse/CreateCourse';
 import CourseInfo from './components/CourseInfo/CourseInfo';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from './store/user/reducer';
+import { getToken } from './selectors';
 import './App.css';
 
 function App() {
 	const [token, setToken] = useState(localStorage.getItem('token'));
-	const userToken = useSelector((state) => state.user.token);
+	const userToken = useSelector(getToken);
 	const dispatch = useDispatch();
 
 	useEffect(() => {

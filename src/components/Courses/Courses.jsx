@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCoursesList, getAuthorsList } from '../../services';
+import { getCourses, getAuthors } from '../../selectors';
 import CourseCard from './components/CourseCard/CourseCard';
 import SearchBar from './components/SearchBar/SearchBar';
 import './courses.css';
-import * as actions from '../../store/courses/actionCreators';
-import { connect } from 'react-redux';
-function Courses({ coursesList }) {
+
+function Courses() {
 	const dispatch = useDispatch();
-	// const coursesList = useSelector((state) => state.course.courses);
-	const authorsList = useSelector((state) => state.author.authors);
+	const coursesList = useSelector(getCourses);
+	const authorsList = useSelector(getAuthors);
+	const coursesFetching = useSelector((state) => state.course.isFetching);
 	const [courses, setCourse] = useState(coursesList);
-	// console.log(coursesList);
 
 	useEffect(() => {
 		if (!!courses.length) {
@@ -21,15 +20,18 @@ function Courses({ coursesList }) {
 	}, [courses]);
 
 	useEffect(() => {
-		if (!coursesList.length) {
+		if (!coursesFetching) {
 			dispatch(getCoursesList());
 		} else {
 			setCourse(coursesList);
 		}
+	}, [coursesFetching, coursesList, dispatch]);
+
+	useEffect(() => {
 		if (!authorsList.length) {
 			dispatch(getAuthorsList());
 		}
-	}, [coursesList, authorsList, dispatch]);
+	}, [authorsList, dispatch]);
 
 	const valChange = (val) => {
 		let idx = [];
@@ -63,13 +65,4 @@ function Courses({ coursesList }) {
 	);
 }
 
-const mapStateToProps = (state) => ({
-	coursesList: state.course.courses,
-});
-
-export default connect(mapStateToProps, actions)(Courses);
-
-Courses.propTypes = {
-	coursesList: PropTypes.array,
-	authorsList: PropTypes.array,
-};
+export default Courses;

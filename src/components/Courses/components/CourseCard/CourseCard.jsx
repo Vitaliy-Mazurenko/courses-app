@@ -3,11 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { BUTTON_SHOW } from '../../../../constants';
 import Button from '../../../../common/Button/Button.jsx';
-import './courseCard.css';
 import pipeDuration from '../../../../helpers/pipeDuration';
-
+import { delCourses } from '../../../../store/courses/reducer';
+import { useDispatch } from 'react-redux';
+import './courseCard.css';
 const CourseCard = ({ course, authorsList }) => {
 	let navigate = useNavigate();
+	const dispatch = useDispatch();
+
 	function formDate(iDate) {
 		if (iDate < 10) {
 			return '0' + iDate;
@@ -17,7 +20,15 @@ const CourseCard = ({ course, authorsList }) => {
 	}
 
 	const showCourse = (e) => {
-		navigate(`/courses/${e.target.id}`);
+		navigate(`/courses/${e.target.parentNode.id}`);
+	};
+
+	const onDelete = (e) => {
+		if (e.target.parentNode.parentNode.id) {
+			dispatch(delCourses(e.target.parentNode.parentNode.id));
+		} else {
+			dispatch(delCourses(e.target.parentNode.id));
+		}
 	};
 
 	return (
@@ -53,11 +64,14 @@ const CourseCard = ({ course, authorsList }) => {
 								.replace(new RegExp(',', 'g'), '.')}
 						</span>
 					</p>
-					<Button
-						id={course['id']}
-						onClick={(e) => showCourse(e)}
-						text={BUTTON_SHOW}
-					/>
+					<div id={course['id']} className='btn-show-trash'>
+						<Button onClick={(e) => showCourse(e)} text={BUTTON_SHOW} />
+						<Button text={<i className='fa fa-pencil'></i>}></Button>
+						<Button
+							onClick={(e) => onDelete(e)}
+							text={<i className='fa fa-trash'></i>}
+						></Button>
+					</div>
 				</div>
 			</div>
 		</>
