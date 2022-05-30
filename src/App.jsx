@@ -9,10 +9,11 @@ import Login from './components/Login/Login';
 import Header from './components/Header/Header';
 import Registration from './components/Registration/Registration';
 import Courses from './components/Courses/Courses';
-import CreateCourse from './components/CreateCourse/CreateCourse';
+import CourseFrom from './components/CourseFrom/CourseFrom';
 import CourseInfo from './components/CourseInfo/CourseInfo';
+import PrivateRouter from './components/PrivateRouter/PrivateRouter';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUser } from './store/user/reducer';
+import { thunkAction } from './store/user/thunk';
 import { getToken } from './selectors';
 import './App.css';
 
@@ -20,18 +21,16 @@ function App() {
 	const [token, setToken] = useState(localStorage.getItem('token'));
 	const userToken = useSelector(getToken);
 	const dispatch = useDispatch();
+	console.log(userToken);
 
 	useEffect(() => {
-		const localToken = localStorage.getItem('token');
-		const name = localStorage.getItem('name');
-		if (!userToken && localToken) {
-			let email = 'email';
-			dispatch(getUser(name, email, localToken));
-			setToken(localStorage.getItem('token'));
+		if (token) {
+			setToken(userToken);
+			thunkAction(dispatch, token);
 		} else {
 			setToken(userToken);
 		}
-	}, [userToken, dispatch]);
+	}, [token, userToken, dispatch]);
 
 	return (
 		<div className='App'>
@@ -51,7 +50,17 @@ function App() {
 					<Route
 						path='/courses/add'
 						element={
-							token ? <CreateCourse /> : <Navigate replace to='/login' />
+							<PrivateRouter>
+								<CourseFrom />
+							</PrivateRouter>
+						}
+					/>
+					<Route
+						path='/courses/update/:id'
+						element={
+							<PrivateRouter>
+								<CourseFrom />
+							</PrivateRouter>
 						}
 					/>
 					<Route exact path='/courses/:id' element={<CourseInfo />} />

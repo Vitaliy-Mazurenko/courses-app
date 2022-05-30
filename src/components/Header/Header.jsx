@@ -4,25 +4,27 @@ import { useNavigate } from 'react-router-dom';
 import Logo from './components/Logo/Logo';
 import Button from '../../common/Button/Button';
 import { BUTTON_LOGOUT } from '../../constants';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { delUser } from '../../store/user/reducer';
+import { getUserName, getRole } from '../../selectors';
 
 export default function Header() {
-	const name = localStorage.getItem('name');
+	const userName = useSelector(getUserName);
+	const userRole = useSelector(getRole);
 	const dispatch = useDispatch();
 	let navigate = useNavigate();
 	const logOut = () => {
 		navigate('/login');
-		dispatch(delUser());
 		localStorage.clear();
+		dispatch(delUser());
 	};
 
 	return (
 		<div className='Header'>
 			<Logo />
-			{name ? (
+			{userName || userRole ? (
 				<div className='log'>
-					{name}
+					{userName || userRole}
 					<Button text={BUTTON_LOGOUT} onClick={logOut} />
 				</div>
 			) : (

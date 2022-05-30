@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCoursesList, getAuthorsList } from '../../services';
-import { getCourses, getAuthors } from '../../selectors';
+import { getCourses, getAuthors, isFetch } from '../../selectors';
 import CourseCard from './components/CourseCard/CourseCard';
 import SearchBar from './components/SearchBar/SearchBar';
 import './courses.css';
@@ -10,7 +10,7 @@ function Courses() {
 	const dispatch = useDispatch();
 	const coursesList = useSelector(getCourses);
 	const authorsList = useSelector(getAuthors);
-	const coursesFetching = useSelector((state) => state.course.isFetching);
+	const coursesFetching = useSelector(isFetch);
 	const [courses, setCourse] = useState(coursesList);
 
 	useEffect(() => {

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
-import { addCourses } from '../../store/courses/reducer';
+import { setCourses } from '../../store/courses/reducer';
+
 import { addAuthors } from '../../store/authors/reducer';
 import { getAuthors } from '../../selectors';
 import {
@@ -13,14 +14,23 @@ import {
 } from '../../constants';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
-import dateGenerator from '../../helpers/dateGenerator';
+// import dateGenerator from '../../helpers/dateGenerator';
 import pipeDuration from '../../helpers/pipeDuration';
-import './createCourse.css';
+import { getCourses } from '../../selectors';
+import { getCoursesList } from '../../services'; //, getAuthorsList
+import { useParams } from 'react-router-dom';
+import { thunkAction } from '../../store/courses/thunk';
+import './courseFrom.css';
 
-function CreateCourse() {
+function CourseFrom() {
 	const [title, setTitle] = useState('');
 	const authorsList = useSelector(getAuthors);
 	const [authors, setAuthors] = useState(authorsList);
+	const params = useParams();
+	const coursesList = useSelector(getCourses);
+	const cours = coursesList
+		.filter((course) => course.id.includes(params.id))
+		.shift();
 	const [authorCourse, setAuthorCourse] = useState('');
 	const [valueAuthor, setAuthor] = useState('');
 	const [description, setDescription] = useState('');
@@ -32,14 +42,25 @@ function CreateCourse() {
 
 	useEffect(() => {
 		setAuthors(authors);
-	}, [dispatch, authors]);
+	}, [authors]);
+
+	useEffect(() => {
+		console.log(cours);
+		if (cours) {
+			setTitle(cours.title);
+			setDescription(cours.description);
+			setDuration(cours.duration);
+			// dispatch(delCourses(params.id));
+		}
+	}, [cours]);
 
 	const addAuthor = (newAuthor) => {
 		dispatch(addAuthors(newAuthor));
 	};
 
 	const addCourse = (newCourse) => {
-		dispatch(addCourses(newCourse));
+		thunkAction(newCourse);
+		dispatch(setCourses());
 	};
 
 	const handleCreate = (e) => {
@@ -50,7 +71,8 @@ function CreateCourse() {
 			setCheckTextArea('text length should be at least 2 characters');
 		} else {
 			setCheckTextArea('');
-			let creationDate = dateGenerator(new Date());
+			// let creationDate = dateGenerator(new Date());
+			let creationDuration = Number(duration);
 			let authors = [];
 			for (let i of authorCourse) {
 				authors.push(i.id);
@@ -58,12 +80,11 @@ function CreateCourse() {
 			addCourse({
 				title,
 				description,
-				creationDate,
-				duration,
+				duration: creationDuration,
 				authors,
-				id: uuid(),
 			});
 			navigate('/courses');
+			dispatch(getCoursesList());
 		}
 	};
 
@@ -197,4 +218,4 @@ function CreateCourse() {
 	);
 }
 
-export default CreateCourse;
+export default CourseFrom;

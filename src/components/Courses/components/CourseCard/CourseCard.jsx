@@ -5,9 +5,12 @@ import { BUTTON_SHOW } from '../../../../constants';
 import Button from '../../../../common/Button/Button.jsx';
 import pipeDuration from '../../../../helpers/pipeDuration';
 import { delCourses } from '../../../../store/courses/reducer';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getRole } from '../../../../selectors';
 import './courseCard.css';
+
 const CourseCard = ({ course, authorsList }) => {
+	const isAdmin = useSelector(getRole);
 	let navigate = useNavigate();
 	const dispatch = useDispatch();
 
@@ -28,6 +31,17 @@ const CourseCard = ({ course, authorsList }) => {
 			dispatch(delCourses(e.target.parentNode.parentNode.id));
 		} else {
 			dispatch(delCourses(e.target.parentNode.id));
+		}
+	};
+
+	const updateCourse = (e) => {
+		if (e.target.parentNode.parentNode.id) {
+			navigate(`/courses/update/${e.target.parentNode.parentNode.id}`);
+			// dispatch(delCourses(e.target.parentNode.parentNode.id));
+		}
+		if (e.target.parentNode.id) {
+			navigate(`/courses/update/${e.target.parentNode.id}`);
+			// dispatch(delCourses(e.target.parentNode.id));
 		}
 	};
 
@@ -66,11 +80,22 @@ const CourseCard = ({ course, authorsList }) => {
 					</p>
 					<div id={course['id']} className='btn-show-trash'>
 						<Button onClick={(e) => showCourse(e)} text={BUTTON_SHOW} />
-						<Button text={<i className='fa fa-pencil'></i>}></Button>
-						<Button
-							onClick={(e) => onDelete(e)}
-							text={<i className='fa fa-trash'></i>}
-						></Button>
+						{isAdmin === 'admin' ? (
+							<Button
+								onClick={(e) => updateCourse(e)}
+								text={<i className='fa fa-pencil'></i>}
+							></Button>
+						) : (
+							<></>
+						)}
+						{isAdmin === 'admin' ? (
+							<Button
+								onClick={(e) => onDelete(e)}
+								text={<i className='fa fa-trash'></i>}
+							></Button>
+						) : (
+							<></>
+						)}
 					</div>
 				</div>
 			</div>

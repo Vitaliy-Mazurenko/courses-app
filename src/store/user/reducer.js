@@ -6,6 +6,7 @@ const userInitialState = {
 	name: '',
 	email: '',
 	token: '',
+	role: '',
 };
 export default function authorsReducer(state = userInitialState, action) {
 	switch (action.type) {
@@ -15,6 +16,7 @@ export default function authorsReducer(state = userInitialState, action) {
 				name: action.name,
 				email: action.email,
 				token: action.token,
+				role: action.role,
 			};
 		case actions.DEL_USER:
 			return userInitialState;
@@ -23,6 +25,7 @@ export default function authorsReducer(state = userInitialState, action) {
 	}
 }
 
-export const getUser = (name, email, token) => getUSER(name, email, token);
+export const getUser = (name, email, token, role) =>
+	getUSER(name, email, token, role);
 
 export const delUser = () => delUSER();
