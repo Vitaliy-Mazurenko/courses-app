@@ -12,7 +12,7 @@ function Courses() {
 	const authorsList = useSelector(getAuthors);
 	const coursesFetching = useSelector(isFetch);
 	const [courses, setCourse] = useState(coursesList);
-
+	// console.log(authorsList);
 	useEffect(() => {
 		if (!!courses.length) {
 			setCourse(courses);
@@ -23,6 +23,7 @@ function Courses() {
 		if (!coursesFetching) {
 			dispatch(getCoursesList());
 		} else {
+			// console.log(coursesList);
 			setCourse(coursesList);
 		}
 	}, [coursesFetching, coursesList, dispatch]);

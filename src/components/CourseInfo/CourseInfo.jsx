@@ -14,7 +14,7 @@ export default function CourseInfo() {
 		.shift();
 	const back = '< Back to courses';
 	function formDate(iDate) {
-		if (iDate < 10) {
+		if (iDate.length < 2) {
 			return '0' + iDate;
 		} else {
 			return iDate;

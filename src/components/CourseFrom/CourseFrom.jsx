@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { v4 as uuid } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCourses } from '../../store/courses/reducer';
+import { addCourses } from '../../store/courses/reducer';
 
 import { addAuthors } from '../../store/authors/reducer';
 import { getAuthors } from '../../selectors';
@@ -11,15 +10,16 @@ import {
 	BTN_CREATE_AUTHOR,
 	BTN_ADD_AUTHOR,
 	BTN_DEL_AUTHOR,
+	BTN_UPDATE_COURSE,
 } from '../../constants';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
-// import dateGenerator from '../../helpers/dateGenerator';
 import pipeDuration from '../../helpers/pipeDuration';
 import { getCourses } from '../../selectors';
-import { getCoursesList } from '../../services'; //, getAuthorsList
+import { getCoursesList, getAuthorsList } from '../../services';
 import { useParams } from 'react-router-dom';
-import { thunkAction } from '../../store/courses/thunk';
+import { thunkActionAdd } from '../../store/courses/thunk';
+import { thunkActionAuthorAdd } from '../../store/authors/thunk';
 import './courseFrom.css';
 
 function CourseFrom() {
@@ -45,22 +45,28 @@ function CourseFrom() {
 	}, [authors]);
 
 	useEffect(() => {
-		console.log(cours);
 		if (cours) {
 			setTitle(cours.title);
 			setDescription(cours.description);
 			setDuration(cours.duration);
-			// dispatch(delCourses(params.id));
+			setAuthorCourse(
+				authorsList.filter((item) => cours.authors.includes(item['id']))
+			);
+			setAuthors(
+				authorsList.filter((aut) => !cours.authors.includes(aut['id']))
+			);
 		}
-	}, [cours]);
+	}, [cours, authorsList]);
 
 	const addAuthor = (newAuthor) => {
 		dispatch(addAuthors(newAuthor));
 	};
-
-	const addCourse = (newCourse) => {
-		thunkAction(newCourse);
-		dispatch(setCourses());
+	//async
+	const addCourse = async (newCourse) => {
+		(async () => {
+			let response = await thunkActionAdd(newCourse);
+			dispatch(addCourses(response));
+		})();
 	};
 
 	const handleCreate = (e) => {
@@ -71,7 +77,6 @@ function CourseFrom() {
 			setCheckTextArea('text length should be at least 2 characters');
 		} else {
 			setCheckTextArea('');
-			// let creationDate = dateGenerator(new Date());
 			let creationDuration = Number(duration);
 			let authors = [];
 			for (let i of authorCourse) {
@@ -85,6 +90,7 @@ function CourseFrom() {
 			});
 			navigate('/courses');
 			dispatch(getCoursesList());
+			dispatch(getAuthorsList());
 		}
 	};
 
@@ -93,11 +99,14 @@ function CourseFrom() {
 		if (valueAuthor.length < 2) {
 			setCheckAuthor('author name length should be at least 2 characters');
 		} else {
-			const newAuthor = { name: valueAuthor, id: uuid() };
-			addAuthor(newAuthor);
-			setCheckAuthor('');
-			setAuthors([...authors, newAuthor]);
-			setAuthor('');
+			(async () => {
+				let responseAuthor = await thunkActionAuthorAdd(valueAuthor);
+				console.log(responseAuthor);
+				addAuthor(responseAuthor);
+				setCheckAuthor('');
+				setAuthors([...authors, responseAuthor]);
+				setAuthor('');
+			})();
 		}
 	}
 
@@ -135,7 +144,7 @@ function CourseFrom() {
 						<Button
 							type='submit'
 							className='btn-create'
-							text={BTN_CREATE_COURSE}
+							text={!cours ? BTN_CREATE_COURSE : BTN_UPDATE_COURSE}
 							onClick={handleCreate}
 						/>
 					</div>

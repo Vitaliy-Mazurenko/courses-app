@@ -7,6 +7,7 @@ import pipeDuration from '../../../../helpers/pipeDuration';
 import { delCourses } from '../../../../store/courses/reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRole } from '../../../../selectors';
+import { thunkActionDel } from '../../../../store/courses/thunk';
 import './courseCard.css';
 
 const CourseCard = ({ course, authorsList }) => {
@@ -15,7 +16,7 @@ const CourseCard = ({ course, authorsList }) => {
 	const dispatch = useDispatch();
 
 	function formDate(iDate) {
-		if (iDate < 10) {
+		if (iDate.length < 2) {
 			return '0' + iDate;
 		} else {
 			return iDate;
@@ -29,8 +30,11 @@ const CourseCard = ({ course, authorsList }) => {
 	const onDelete = (e) => {
 		if (e.target.parentNode.parentNode.id) {
 			dispatch(delCourses(e.target.parentNode.parentNode.id));
-		} else {
+			thunkActionDel(e.target.parentNode.parentNode.id);
+		}
+		if (e.target.parentNode.id) {
 			dispatch(delCourses(e.target.parentNode.id));
+			thunkActionDel(e.target.parentNode.id);
 		}
 	};
 
@@ -38,10 +42,12 @@ const CourseCard = ({ course, authorsList }) => {
 		if (e.target.parentNode.parentNode.id) {
 			navigate(`/courses/update/${e.target.parentNode.parentNode.id}`);
 			// dispatch(delCourses(e.target.parentNode.parentNode.id));
+			thunkActionDel(e.target.parentNode.parentNode.id);
 		}
 		if (e.target.parentNode.id) {
 			navigate(`/courses/update/${e.target.parentNode.id}`);
 			// dispatch(delCourses(e.target.parentNode.id));
+			thunkActionDel(e.target.parentNode.id);
 		}
 	};
 

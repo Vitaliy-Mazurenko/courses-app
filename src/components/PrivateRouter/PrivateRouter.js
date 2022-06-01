@@ -5,7 +5,6 @@ import { getRole } from '../../selectors';
 function PrivateRouter({ children }) {
 	const isAdmin = useSelector(getRole);
 	const location = useLocation();
-	console.log(isAdmin);
 
 	if (isAdmin !== 'admin') {
 		return <Navigate to='/courses' state={{ from: location }} />;
