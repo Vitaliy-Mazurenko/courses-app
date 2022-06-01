@@ -21,7 +21,6 @@ function App() {
 	const [token, setToken] = useState(localStorage.getItem('token'));
 	const userToken = useSelector(getToken);
 	const dispatch = useDispatch();
-	console.log(userToken);
 
 	useEffect(() => {
 		if (token) {

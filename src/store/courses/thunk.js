@@ -12,7 +12,6 @@ export const thunkActionAdd = async (newCourse) => {
 		});
 		const json = await response.json();
 		if (response.ok) {
-			console.log(json);
 			return json.result;
 		} else {
 			console.warn(json);
@@ -35,7 +34,6 @@ export const thunkActionDel = async (id) => {
 		});
 		const json = await response.json();
 		if (response.ok) {
-			console.log(json);
 			return json.result;
 		} else {
 			console.warn(json);
@@ -59,7 +57,6 @@ export const thunkActionUpdate = async (id, updateCourse) => {
 		});
 		const json = await response.json();
 		if (response.ok) {
-			console.log(json);
 			return json.result;
 		} else {
 			console.warn(json);
