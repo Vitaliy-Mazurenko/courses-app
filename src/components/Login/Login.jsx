@@ -34,7 +34,6 @@ export default function Login() {
 		if (response) {
 			const result = await response.json();
 			if (response.ok) {
-				console.warn(result);
 				navigate('/courses/');
 				dispatch(getUser(result.user.name, result.user.email, result.result));
 				localStorage.setItem('token', result.result);

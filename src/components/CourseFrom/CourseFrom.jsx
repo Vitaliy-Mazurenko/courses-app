@@ -18,7 +18,7 @@ import pipeDuration from '../../helpers/pipeDuration';
 import { getCourses } from '../../selectors';
 import { getCoursesList, getAuthorsList } from '../../services';
 import { useParams } from 'react-router-dom';
-import { thunkActionAdd } from '../../store/courses/thunk';
+import { thunkActionAdd, thunkActionUpdate } from '../../store/courses/thunk';
 import { thunkActionAuthorAdd } from '../../store/authors/thunk';
 import './courseFrom.css';
 
@@ -28,7 +28,7 @@ function CourseFrom() {
 	const [authors, setAuthors] = useState(authorsList);
 	const params = useParams();
 	const coursesList = useSelector(getCourses);
-	const cours = coursesList
+	const update = coursesList
 		.filter((course) => course.id.includes(params.id))
 		.shift();
 	const [authorCourse, setAuthorCourse] = useState('');
@@ -45,28 +45,35 @@ function CourseFrom() {
 	}, [authors]);
 
 	useEffect(() => {
-		if (cours) {
-			setTitle(cours.title);
-			setDescription(cours.description);
-			setDuration(cours.duration);
+		if (update) {
+			setTitle(update.title);
+			setDescription(update.description);
+			setDuration(update.duration);
 			setAuthorCourse(
-				authorsList.filter((item) => cours.authors.includes(item['id']))
+				authorsList.filter((item) => update.authors.includes(item['id']))
 			);
 			setAuthors(
-				authorsList.filter((aut) => !cours.authors.includes(aut['id']))
+				authorsList.filter((aut) => !update.authors.includes(aut['id']))
 			);
 		}
-	}, [cours, authorsList]);
+	}, [update, authorsList]);
 
 	const addAuthor = (newAuthor) => {
 		dispatch(addAuthors(newAuthor));
 	};
-	//async
+
 	const addCourse = async (newCourse) => {
-		(async () => {
-			let response = await thunkActionAdd(newCourse);
-			dispatch(addCourses(response));
-		})();
+		if (update) {
+			(async () => {
+				await thunkActionUpdate(params.id, newCourse);
+				dispatch(getCoursesList());
+			})();
+		} else {
+			(async () => {
+				let response = await thunkActionAdd(newCourse);
+				dispatch(addCourses(response));
+			})();
+		}
 	};
 
 	const handleCreate = (e) => {
@@ -144,7 +151,7 @@ function CourseFrom() {
 						<Button
 							type='submit'
 							className='btn-create'
-							text={!cours ? BTN_CREATE_COURSE : BTN_UPDATE_COURSE}
+							text={!update ? BTN_CREATE_COURSE : BTN_UPDATE_COURSE}
 							onClick={handleCreate}
 						/>
 					</div>

@@ -44,3 +44,27 @@ export const thunkActionDel = async (id) => {
 		console.warn(error.message);
 	}
 };
+
+export const thunkActionUpdate = async (id, updateCourse) => {
+	const URL = 'http://localhost:4000/courses/';
+
+	try {
+		const response = await fetch(`${URL}${id}`, {
+			method: 'PUT',
+			body: JSON.stringify(updateCourse),
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: localStorage.getItem('token'),
+			},
+		});
+		const json = await response.json();
+		if (response.ok) {
+			console.log(json);
+			return json.result;
+		} else {
+			console.warn(json);
+		}
+	} catch (error) {
+		console.warn(error.message);
+	}
+};

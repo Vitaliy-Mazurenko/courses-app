@@ -41,13 +41,9 @@ const CourseCard = ({ course, authorsList }) => {
 	const updateCourse = (e) => {
 		if (e.target.parentNode.parentNode.id) {
 			navigate(`/courses/update/${e.target.parentNode.parentNode.id}`);
-			// dispatch(delCourses(e.target.parentNode.parentNode.id));
-			thunkActionDel(e.target.parentNode.parentNode.id);
 		}
 		if (e.target.parentNode.id) {
 			navigate(`/courses/update/${e.target.parentNode.id}`);
-			// dispatch(delCourses(e.target.parentNode.id));
-			thunkActionDel(e.target.parentNode.id);
 		}
 	};
 
