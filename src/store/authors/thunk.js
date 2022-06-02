@@ -12,7 +12,6 @@ export const thunkActionAuthorAdd = async (newAuthor) => {
 		});
 		const json = await response.json();
 		if (response.ok) {
-			console.log(json);
 			return json.result;
 		} else {
 			console.warn(json);

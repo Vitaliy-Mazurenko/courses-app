@@ -39,11 +39,8 @@ export const thunkActionLogout = async () => {
 				Authorization: localStorage.getItem('token'),
 			},
 		});
-		const json = await response.json();
-		if (response.ok) {
-			console.log(json);
-		} else {
-			console.warn(json);
+		if (!response.ok) {
+			console.log(response);
 		}
 	} catch (error) {
 		console.log(error.message);

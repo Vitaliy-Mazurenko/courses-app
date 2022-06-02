@@ -62,7 +62,7 @@ function CourseFrom() {
 		dispatch(addAuthors(newAuthor));
 	};
 
-	const addCourse = async (newCourse) => {
+	const addCourse = (newCourse) => {
 		if (update) {
 			(async () => {
 				await thunkActionUpdate(params.id, newCourse);
@@ -108,7 +108,6 @@ function CourseFrom() {
 		} else {
 			(async () => {
 				let responseAuthor = await thunkActionAuthorAdd(valueAuthor);
-				console.log(responseAuthor);
 				addAuthor(responseAuthor);
 				setCheckAuthor('');
 				setAuthors([...authors, responseAuthor]);
