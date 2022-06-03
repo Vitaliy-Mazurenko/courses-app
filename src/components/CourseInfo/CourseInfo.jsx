@@ -9,10 +9,7 @@ export default function CourseInfo() {
 	const params = useParams();
 	const authorsList = useSelector(getAuthors);
 	const coursesList = useSelector(getCourses);
-	const cours = coursesList
-		.filter((course) => course.id.includes(params.id))
-		.shift();
-	const back = '< Back to courses';
+	const cours = coursesList.find((course) => course.id.includes(params.id));
 	function formDate(iDate) {
 		if (iDate.length < 2) {
 			return '0' + iDate;
@@ -22,7 +19,7 @@ export default function CourseInfo() {
 	}
 	return (
 		<div className='courseInformation' key={cours['id']}>
-			<Link to='/courses'>{back}</Link>
+			<Link to='/courses'>{'< Back to courses'}</Link>
 			<h2 className='title'>{cours.title}</h2>
 			<div className='descInformation'>
 				<div className='description'>{cours.description}</div>
