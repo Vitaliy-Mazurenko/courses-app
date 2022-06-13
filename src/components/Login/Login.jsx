@@ -3,24 +3,32 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
-import { BUTTON_LOGIN } from '../../constants';
+import { BUTTON_LOGIN, URL, IF_NOT_HAVE_ACCOUNT } from '../../constants';
 import { useDispatch } from 'react-redux';
 import { getUser } from '../../store/user/reducer';
 import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
-	const URL = 'http://localhost:4000/login';
-	const [email, setEmail] = useState();
-	const [password, setPassword] = useState();
 	const [error, setError] = useState('');
-	const user = { email, password };
+	const [user, setUser] = useState({
+		email: '',
+		password: '',
+	});
 	const dispatch = useDispatch();
-	let navigate = useNavigate();
+	const navigate = useNavigate();
+
+	const handleChange = (e) => {
+		const value = e.target.value;
+		setUser({
+			...user,
+			[e.target.name]: value,
+		});
+	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		let response = await fetch(URL, {
+		let response = await fetch(`${URL}login`, {
 			method: 'POST',
 			body: JSON.stringify(user),
 			headers: {
@@ -55,22 +63,26 @@ export default function Login() {
 					<Input
 						required
 						type='email'
+						name='email'
+						value={user.email}
 						placeholder='Enter email'
-						onChange={(e) => setEmail(e.target.value)}
+						onChange={handleChange}
 					/>
 					<label>Password</label>
 					<Input
 						required
 						minLength='6'
 						type='password'
+						name='password'
+						value={user.password}
 						placeholder='Enter password'
-						onChange={(e) => setPassword(e.target.value)}
+						onChange={handleChange}
 					/>
 					<span className='login-err'>{error}</span>
 					<Button text={BUTTON_LOGIN} />
 				</form>
 				<div className='account'>
-					If you not have an account you can{' '}
+					{IF_NOT_HAVE_ACCOUNT}
 					<Link to='/registration'>Registration</Link>
 				</div>
 			</div>

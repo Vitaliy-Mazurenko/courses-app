@@ -1,9 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { BUTTON_SHOW } from '../../../../constants';
+import { BUTTON_SHOW, HOURS } from '../../../../constants';
 import Button from '../../../../common/Button/Button.jsx';
 import pipeDuration from '../../../../helpers/pipeDuration';
+import formDate from '../../../../helpers/formDate';
 import { delCourses } from '../../../../store/courses/reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRole } from '../../../../selectors';
@@ -12,16 +13,15 @@ import './courseCard.css';
 
 const CourseCard = ({ course, authorsList }) => {
 	const isAdmin = useSelector(getRole);
-	let navigate = useNavigate();
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	function formDate(iDate) {
-		if (iDate.length < 2) {
-			return '0' + iDate;
-		} else {
-			return iDate;
-		}
-	}
+	const authorsListFormatting = (list) => {
+		return list
+			.filter((item) => course.authors.includes(item.id))
+			.map((item) => ' ' + item.name)
+			.toString();
+	};
 
 	const showCourse = (e) => {
 		navigate(`/courses/${e.target.parentNode.id}`);
@@ -49,7 +49,7 @@ const CourseCard = ({ course, authorsList }) => {
 
 	return (
 		<>
-			<div className='courseCard' key={course['id']}>
+			<div className='courseCard' key={course.id}>
 				<div className='courseDescription'>
 					<h2 className='title'>{course.title}</h2>
 					<div className='description'>{course.description}</div>
@@ -57,30 +57,19 @@ const CourseCard = ({ course, authorsList }) => {
 				<div className='courseInfo'>
 					<p className='information'>
 						Authors:
-						<span className='info'>
-							{authorsList
-								.filter((item) => course.authors.includes(item['id']))
-								.map((item) => ' ' + item.name)
-								.toString()}
-						</span>
+						<span className='info'>{authorsListFormatting(authorsList)}</span>
 					</p>
 					<p className='information'>
 						Duration:{' '}
 						<span className='info'>
-							{pipeDuration(course.duration) + ' hours'}
+							{pipeDuration(course.duration) + HOURS}
 						</span>
 					</p>
 					<p className='information'>
 						Creation:{' '}
-						<span className='info'>
-							{course.creationDate
-								.split('/')
-								.map((item) => formDate(item))
-								.toString()
-								.replace(new RegExp(',', 'g'), '.')}
-						</span>
+						<span className='info'>{formDate(course.creationDate)}</span>
 					</p>
-					<div id={course['id']} className='btn-show-trash'>
+					<div id={course.id} className='btn-show-trash'>
 						<Button onClick={(e) => showCourse(e)} text={BUTTON_SHOW} />
 						{isAdmin === 'admin' ? (
 							<Button

@@ -33,28 +33,34 @@ function Courses() {
 		}
 	}, [authorsList, dispatch]);
 
-	const valChange = (val) => {
-		let idx = [];
-		for (let i of coursesList) {
-			idx.push(i.id);
-		}
-		if (idx.includes(val)) {
-			setCourse(coursesList.filter((course) => course.id.includes(val)));
-		} else if (val) {
-			setCourse(
-				coursesList.filter((course) =>
-					course.title.toLowerCase().includes(val.toLowerCase())
-				)
-			);
-		} else {
-			setCourse(coursesList);
-		}
+	const searchValue = (val) => {
+		const even = (element) => element.id === val;
+
+		coursesList.some(even)
+			? setCourse(coursesList.filter((course) => course.id.includes(val)))
+			: val
+			? setCourse(
+					coursesList.filter((course) =>
+						course.title.toLowerCase().includes(val.toLowerCase())
+					)
+			  )
+			: setCourse(coursesList);
+
+		// (coursesList.some(even) &&
+		// 	setCourse(coursesList.filter((course) => course.id.includes(val)))) ||
+		// 	(val &&
+		// 		setCourse(
+		// 			coursesList.filter((course) =>
+		// 				course.title.toLowerCase().includes(val.toLowerCase())
+		// 			)
+		// 		)) ||
+		// 	setCourse(coursesList);
 	};
 
 	return (
 		<>
 			<div className='Courses'>
-				<SearchBar valChange={valChange} />
+				<SearchBar searchValue={searchValue} />
 				{courses.map((course) => (
 					<div key={course.id}>
 						<CourseCard course={course} authorsList={authorsList} />

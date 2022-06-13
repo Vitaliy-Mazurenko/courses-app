@@ -2,16 +2,20 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../../common/Button/Button';
 import Input from '../../../../common/Input/Input';
-import { BUTTON_TEXT, BUTTON_ADD_COURSE } from '../../../../constants';
+import {
+	BUTTON_TEXT,
+	BUTTON_ADD_COURSE,
+	ENTER_COURSE_NAME,
+} from '../../../../constants';
 import './searchBar.css';
 
-export default function SearchBar({ valChange }) {
+export default function SearchBar({ searchValue }) {
 	const [value, setValue] = useState('');
-	let navigate = useNavigate();
+	const navigate = useNavigate();
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		valChange(value);
+		searchValue(value);
 		setValue('');
 	};
 	const createCourse = () => {
@@ -23,7 +27,7 @@ export default function SearchBar({ valChange }) {
 			<form onSubmit={handleSubmit} className='form-inline'>
 				<Input
 					type='text'
-					placeholder='Enter course name or id...'
+					placeholder={ENTER_COURSE_NAME}
 					value={value}
 					onChange={(e) => setValue(e.target.value)}
 				/>

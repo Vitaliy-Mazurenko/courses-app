@@ -24,13 +24,11 @@ export default function Header() {
 	return (
 		<div className='Header'>
 			<Logo />
-			{userName || userRole ? (
+			{(userName || userRole) && (
 				<div className='log'>
 					{userName || userRole}
 					<Button text={BUTTON_LOGOUT} onClick={logOut} />
 				</div>
-			) : (
-				<></>
 			)}
 		</div>
 	);

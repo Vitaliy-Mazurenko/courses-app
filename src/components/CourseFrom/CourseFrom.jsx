@@ -23,22 +23,30 @@ import { thunkActionAuthorAdd } from '../../store/authors/thunk';
 import './courseFrom.css';
 
 function CourseFrom() {
-	const [title, setTitle] = useState('');
 	const authorsList = useSelector(getAuthors);
 	const [authors, setAuthors] = useState(authorsList);
 	const params = useParams();
 	const coursesList = useSelector(getCourses);
-	const update = coursesList
-		.filter((course) => course.id.includes(params.id))
-		.shift();
+	const update = coursesList.find((course) => course.id.includes(params.id));
 	const [authorCourse, setAuthorCourse] = useState('');
 	const [valueAuthor, setAuthor] = useState('');
-	const [description, setDescription] = useState('');
-	const [duration, setDuration] = useState('');
+	const [fieldsCourse, setFieldsCourse] = useState({
+		title: '',
+		description: '',
+		duration: '',
+	});
 	const [checkTextArea, setCheckTextArea] = useState('');
 	const [checkAuthor, setCheckAuthor] = useState('');
-	let navigate = useNavigate();
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
+
+	const handleChange = (e) => {
+		const fieldValue = e.target.value;
+		setFieldsCourse({
+			...fieldsCourse,
+			[e.target.name]: fieldValue,
+		});
+	};
 
 	useEffect(() => {
 		setAuthors(authors);
@@ -46,9 +54,11 @@ function CourseFrom() {
 
 	useEffect(() => {
 		if (update) {
-			setTitle(update.title);
-			setDescription(update.description);
-			setDuration(update.duration);
+			setFieldsCourse({
+				title: update.title,
+				description: update.description,
+				duration: update.duration,
+			});
 			setAuthorCourse(
 				authorsList.filter((item) => update.authors.includes(item['id']))
 			);
@@ -62,7 +72,21 @@ function CourseFrom() {
 		dispatch(addAuthors(newAuthor));
 	};
 
-	const addCourse = (newCourse) => {
+	const addCourse = () => {
+		const creationDuration = Number(fieldsCourse.duration);
+		const creationTitle = fieldsCourse.title;
+		const creationDescription = fieldsCourse.description;
+		let authors = [];
+		for (let i of authorCourse) {
+			authors.push(i.id);
+		}
+		const newCourse = {
+			title: creationTitle,
+			description: creationDescription,
+			duration: creationDuration,
+			authors,
+		};
+
 		if (update) {
 			(async () => {
 				await thunkActionUpdate(params.id, newCourse);
@@ -78,23 +102,17 @@ function CourseFrom() {
 
 	const handleCreate = (e) => {
 		e.preventDefault();
-		if (!description || !title || !duration) {
+		if (
+			!fieldsCourse.description ||
+			!fieldsCourse.title ||
+			!fieldsCourse.duration
+		) {
 			alert('Please, fill in all fields');
-		} else if (description.length < 2) {
+		} else if (fieldsCourse.description.length < 2) {
 			setCheckTextArea('text length should be at least 2 characters');
 		} else {
 			setCheckTextArea('');
-			let creationDuration = Number(duration);
-			let authors = [];
-			for (let i of authorCourse) {
-				authors.push(i.id);
-			}
-			addCourse({
-				title,
-				description,
-				duration: creationDuration,
-				authors,
-			});
+			addCourse();
 			navigate('/courses');
 			dispatch(getCoursesList());
 			dispatch(getAuthorsList());
@@ -144,8 +162,9 @@ function CourseFrom() {
 							minLength='2'
 							type='text'
 							placeholder='Enter title...'
-							value={title}
-							onChange={(e) => setTitle(e.target.value)}
+							value={fieldsCourse.title}
+							name='title'
+							onChange={handleChange}
 						/>
 						<Button
 							type='submit'
@@ -157,9 +176,10 @@ function CourseFrom() {
 					<label>Description</label>
 					<textarea
 						type='text'
-						value={description}
 						placeholder='Enter description'
-						onChange={(e) => setDescription(e.target.value)}
+						value={fieldsCourse.description}
+						name='description'
+						onChange={handleChange}
 					/>
 					<span className='validate'>{checkTextArea}</span>
 					<div className='authors-wrap'>
@@ -184,22 +204,23 @@ function CourseFrom() {
 								type='number'
 								min='1'
 								placeholder='Enter duration in minutes...'
-								value={duration}
-								onChange={(e) => setDuration(e.target.value)}
+								value={fieldsCourse.duration}
+								name='duration'
+								onChange={handleChange}
 							/>
 							<span className='info-duration'>
-								Duration: <b>{pipeDuration(duration)}</b> hours
+								Duration: <b>{pipeDuration(fieldsCourse.duration)}</b> hours
 							</span>
 						</div>
 						<div className='authors'>
 							<h4 className='author-title'>Authors</h4>
 							<p className='info'>
 								{authors.map((item) => (
-									<span key={item['id']} className='author-item'>
+									<span key={item.id} className='author-item'>
 										{' '}
-										{item['name']}
+										{item.name}
 										<Button
-											id={item['id']}
+											id={item.id}
 											className='btn-add'
 											text={BTN_ADD_AUTHOR}
 											onClick={(e) => addCourseAuthor(e)}
@@ -213,11 +234,11 @@ function CourseFrom() {
 							</div>
 							<p className='info'>
 								{[...authorCourse].map((item) => (
-									<span key={item['id']} className='author-item authors-course'>
+									<span key={item.id} className='author-item authors-course'>
 										{' '}
-										{item['name']}
+										{item.name}
 										<Button
-											id={item['id']}
+											id={item.id}
 											className='btn-add'
 											text={BTN_DEL_AUTHOR}
 											onClick={(e) => delCourseAuthor(e)}

@@ -1,27 +1,32 @@
 import './registration.css';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
-import { BUTTON_REG } from '../../constants';
+import { BUTTON_REG, URL, IF_HAVE_ACCOUNT } from '../../constants';
 
 export default function Registration() {
-	const [name, setName] = useState('');
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
+	const [newUser, setUserState] = useState({
+		name: '',
+		email: '',
+		password: '',
+	});
 	const [error, setError] = useState('');
-	const URL = 'http://localhost:4000/register';
-	let navigate = useNavigate();
+	const navigate = useNavigate();
+	const ref = useRef(null);
+
+	const handleChange = () => {
+		setUserState({
+			name: ref.current.name.value,
+			email: ref.current.email.value,
+			password: ref.current.password.value,
+		});
+	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const newUser = {
-			name,
-			password,
-			email,
-		};
 
-		return await fetch(URL, {
+		return await fetch(`${URL}register`, {
 			method: 'POST',
 			body: JSON.stringify(newUser),
 			headers: {
@@ -47,36 +52,36 @@ export default function Registration() {
 			<div className='registration'>
 				<div className='registration-wrap'>
 					<h2>Registration</h2>
-					<form onSubmit={handleSubmit} className='form-registration'>
+					<form onSubmit={handleSubmit} className='form-registration' ref={ref}>
 						<label>Name</label>
 						<Input
 							required
 							type='text'
+							name='name'
 							placeholder='Enter name'
-							value={name}
-							onChange={(e) => setName(e.target.value)}
+							onChange={handleChange}
 						/>
 						<label>Email</label>
 						<Input
 							required
 							type='email'
+							name='email'
 							placeholder='Enter email'
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
+							onChange={handleChange}
 						/>
 						<label>Password</label>
 						<Input
 							required
 							type='password'
+							name='password'
 							placeholder='Enter password'
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
+							onChange={handleChange}
 						/>
 						<span className='login-err'>{error}</span>
 						<Button text={BUTTON_REG} />
 					</form>
 					<div className='account'>
-						If you have an account you can <Link to='/login'>Login</Link>
+						{IF_HAVE_ACCOUNT} <Link to='/login'>Login</Link>
 					</div>
 				</div>
 			</div>
