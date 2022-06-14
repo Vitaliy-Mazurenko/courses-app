@@ -12,8 +12,9 @@ import { thunkActionLogout } from '../../store/user/thunk';
 export default function Header() {
 	const userName = useSelector(getUserName);
 	const userRole = useSelector(getRole);
+	const user = userName || userRole;
 	const dispatch = useDispatch();
-	let navigate = useNavigate();
+	const navigate = useNavigate();
 	const logOut = () => {
 		navigate('/login');
 		dispatch(delUser());
@@ -24,9 +25,9 @@ export default function Header() {
 	return (
 		<div className='Header'>
 			<Logo />
-			{(userName || userRole) && (
+			{user && (
 				<div className='log'>
-					{userName || userRole}
+					<span data-testid='user'>{user}</span>
 					<Button text={BUTTON_LOGOUT} onClick={logOut} />
 				</div>
 			)}
