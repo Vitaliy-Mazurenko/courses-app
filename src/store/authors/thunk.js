@@ -1,8 +1,7 @@
+import { URL } from '../../constants';
 export const thunkActionAuthorAdd = async (newAuthor) => {
-	const URL = 'http://localhost:4000/authors/add';
-
 	try {
-		const response = await fetch(URL, {
+		const response = await fetch(`${URL}authors/add`, {
 			method: 'POST',
 			body: JSON.stringify({ name: newAuthor }),
 			headers: {

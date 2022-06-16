@@ -11,6 +11,10 @@ import {
 	BTN_ADD_AUTHOR,
 	BTN_DEL_AUTHOR,
 	BTN_UPDATE_COURSE,
+	ENTER_AUTHOR_NAME,
+	ENTER_DURATION,
+	ENTER_DESCRIPTION,
+	ENTER_TITLE,
 } from '../../constants';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
@@ -29,7 +33,7 @@ function CourseFrom() {
 	const coursesList = useSelector(getCourses);
 	const update = coursesList.find((course) => course.id.includes(params.id));
 	const [authorCourse, setAuthorCourse] = useState('');
-	const [valueAuthor, setAuthor] = useState('');
+	const [newAuthor, setAuthor] = useState('');
 	const [fieldsCourse, setFieldsCourse] = useState({
 		title: '',
 		description: '',
@@ -60,10 +64,10 @@ function CourseFrom() {
 				duration: update.duration,
 			});
 			setAuthorCourse(
-				authorsList.filter((item) => update.authors.includes(item['id']))
+				authorsList.filter((item) => update.authors.includes(item.id))
 			);
 			setAuthors(
-				authorsList.filter((aut) => !update.authors.includes(aut['id']))
+				authorsList.filter((author) => !update.authors.includes(author.id))
 			);
 		}
 	}, [update, authorsList]);
@@ -77,9 +81,9 @@ function CourseFrom() {
 		const creationTitle = fieldsCourse.title;
 		const creationDescription = fieldsCourse.description;
 		let authors = [];
-		for (let i of authorCourse) {
+		authorCourse.forEach(function (i) {
 			authors.push(i.id);
-		}
+		});
 		const newCourse = {
 			title: creationTitle,
 			description: creationDescription,
@@ -121,11 +125,11 @@ function CourseFrom() {
 
 	function authorNameAdd(e) {
 		e.preventDefault();
-		if (valueAuthor.length < 2) {
+		if (newAuthor.length < 2) {
 			setCheckAuthor('author name length should be at least 2 characters');
 		} else {
 			(async () => {
-				let responseAuthor = await thunkActionAuthorAdd(valueAuthor);
+				let responseAuthor = await thunkActionAuthorAdd(newAuthor);
 				addAuthor(responseAuthor);
 				setCheckAuthor('');
 				setAuthors([...authors, responseAuthor]);
@@ -136,19 +140,19 @@ function CourseFrom() {
 
 	function addCourseAuthor(e) {
 		e.preventDefault();
-		setAuthors(authors.filter((aut) => aut.id !== e.target.id));
+		setAuthors(authors.filter((author) => author.id !== e.target.id));
 		setAuthorCourse([
 			...authorCourse,
-			...authors.filter((aut) => aut.id === e.target.id),
+			...authors.filter((author) => author.id === e.target.id),
 		]);
 	}
 
 	function delCourseAuthor(e) {
 		e.preventDefault();
-		setAuthorCourse(authorCourse.filter((aut) => aut.id !== e.target.id));
+		setAuthorCourse(authorCourse.filter((author) => author.id !== e.target.id));
 		setAuthors([
 			...authors,
-			...authorCourse.filter((aut) => aut.id === e.target.id),
+			...authorCourse.filter((author) => author.id === e.target.id),
 		]);
 	}
 
@@ -161,7 +165,7 @@ function CourseFrom() {
 						<Input
 							minLength='2'
 							type='text'
-							placeholder='Enter title...'
+							placeholder={ENTER_TITLE}
 							value={fieldsCourse.title}
 							name='title'
 							onChange={handleChange}
@@ -176,7 +180,7 @@ function CourseFrom() {
 					<label>Description</label>
 					<textarea
 						type='text'
-						placeholder='Enter description'
+						placeholder={ENTER_DESCRIPTION}
 						value={fieldsCourse.description}
 						name='description'
 						onChange={handleChange}
@@ -188,8 +192,8 @@ function CourseFrom() {
 							<label>Author name</label>
 							<Input
 								type='text'
-								placeholder='Enter author name...'
-								value={valueAuthor}
+								placeholder={ENTER_AUTHOR_NAME}
+								value={newAuthor}
 								onChange={(e) => setAuthor(e.target.value)}
 							/>
 							<span className='validate'>{checkAuthor}</span>
@@ -203,7 +207,7 @@ function CourseFrom() {
 							<Input
 								type='number'
 								min='1'
-								placeholder='Enter duration in minutes...'
+								placeholder={ENTER_DURATION}
 								value={fieldsCourse.duration}
 								name='duration'
 								onChange={handleChange}
@@ -230,7 +234,7 @@ function CourseFrom() {
 							</p>
 							<h4 className='author-title'>Course authors</h4>
 							<div className='author-title'>
-								{authorCourse.length === 0 ? 'Author list is empty' : ''}
+								{authorCourse.length === 0 && 'Author list is empty'}
 							</div>
 							<p className='info'>
 								{[...authorCourse].map((item) => (

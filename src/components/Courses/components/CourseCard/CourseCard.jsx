@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { BUTTON_SHOW, HOURS } from '../../../../constants';
 import Button from '../../../../common/Button/Button.jsx';
 import pipeDuration from '../../../../helpers/pipeDuration';
-import formDate from '../../../../helpers/formDate';
+import makeDateFormat from '../../../../helpers/makeDateFormat';
 import { delCourses } from '../../../../store/courses/reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRole } from '../../../../selectors';
@@ -23,27 +23,20 @@ const CourseCard = ({ course, authorsList }) => {
 			.toString();
 	};
 
-	const showCourse = (e) => {
-		navigate(`/courses/${e.target.parentNode.id}`);
+	const goToCourse = (id) => {
+		navigate(`/courses/${id}`);
 	};
 
-	const onDelete = (e) => {
-		if (e.target.parentNode.parentNode.id) {
-			dispatch(delCourses(e.target.parentNode.parentNode.id));
-			thunkActionDel(e.target.parentNode.parentNode.id);
-		}
-		if (e.target.parentNode.id) {
-			dispatch(delCourses(e.target.parentNode.id));
-			thunkActionDel(e.target.parentNode.id);
+	const deleteCourse = (id) => {
+		if (id) {
+			dispatch(delCourses(id));
+			thunkActionDel(id);
 		}
 	};
 
-	const updateCourse = (e) => {
-		if (e.target.parentNode.parentNode.id) {
-			navigate(`/courses/update/${e.target.parentNode.parentNode.id}`);
-		}
-		if (e.target.parentNode.id) {
-			navigate(`/courses/update/${e.target.parentNode.id}`);
+	const updateCourse = (id) => {
+		if (id) {
+			navigate(`/courses/update/${id}`);
 		}
 	};
 
@@ -67,25 +60,21 @@ const CourseCard = ({ course, authorsList }) => {
 					</p>
 					<p className='information'>
 						Creation:{' '}
-						<span className='info'>{formDate(course.creationDate)}</span>
+						<span className='info'>{makeDateFormat(course.creationDate)}</span>
 					</p>
-					<div id={course.id} className='btn-show-trash'>
-						<Button onClick={(e) => showCourse(e)} text={BUTTON_SHOW} />
-						{isAdmin === 'admin' ? (
+					<div className='btn-show-trash'>
+						<Button onClick={() => goToCourse(course.id)} text={BUTTON_SHOW} />
+						{isAdmin === 'admin' && (
 							<Button
-								onClick={(e) => updateCourse(e)}
+								onClick={() => updateCourse(course.id)}
 								text={<i className='fa fa-pencil'></i>}
 							></Button>
-						) : (
-							<></>
 						)}
-						{isAdmin === 'admin' ? (
+						{isAdmin === 'admin' && (
 							<Button
-								onClick={(e) => onDelete(e)}
+								onClick={() => deleteCourse(course.id)}
 								text={<i className='fa fa-trash'></i>}
 							></Button>
-						) : (
-							<></>
 						)}
 					</div>
 				</div>

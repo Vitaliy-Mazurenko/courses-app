@@ -1,8 +1,7 @@
+import { URL } from '../../constants';
 export const thunkActionAdd = async (newCourse) => {
-	const URL = 'http://localhost:4000/courses/add';
-
 	try {
-		const response = await fetch(URL, {
+		const response = await fetch(`${URL}courses/add`, {
 			method: 'POST',
 			body: JSON.stringify(newCourse),
 			headers: {
@@ -22,10 +21,8 @@ export const thunkActionAdd = async (newCourse) => {
 };
 
 export const thunkActionDel = async (id) => {
-	const URL = 'http://localhost:4000/courses/';
-
 	try {
-		const response = await fetch(`${URL}${id}`, {
+		const response = await fetch(`${URL}courses/${id}`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
@@ -36,7 +33,7 @@ export const thunkActionDel = async (id) => {
 		if (response.ok) {
 			return json.result;
 		} else {
-			console.warn(json);
+			console.log(json);
 		}
 	} catch (error) {
 		console.warn(error.message);
@@ -44,10 +41,8 @@ export const thunkActionDel = async (id) => {
 };
 
 export const thunkActionUpdate = async (id, updateCourse) => {
-	const URL = 'http://localhost:4000/courses/';
-
 	try {
-		const response = await fetch(`${URL}${id}`, {
+		const response = await fetch(`${URL}courses/${id}`, {
 			method: 'PUT',
 			body: JSON.stringify(updateCourse),
 			headers: {
@@ -59,7 +54,7 @@ export const thunkActionUpdate = async (id, updateCourse) => {
 		if (response.ok) {
 			return json.result;
 		} else {
-			console.warn(json);
+			console.log(json);
 		}
 	} catch (error) {
 		console.warn(error.message);

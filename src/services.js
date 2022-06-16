@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { setCourses } from './store/courses/reducer';
 import { setAuthors } from './store/authors/reducer';
-const URL = 'http://localhost:4000/';
+import { URL } from './constants';
 
 export const getCoursesList = (searchQuery = 'courses/all') => {
 	return async (dispatch) => {

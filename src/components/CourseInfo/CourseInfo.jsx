@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import pipeDuration from '../../helpers/pipeDuration';
-import formDate from '../../helpers/formDate';
+import makeDateFormat from '../../helpers/makeDateFormat';
 import { getAuthors, getCourses } from '../../selectors';
 import { HOURS, BACK_TO_COURSES } from '../../constants';
 import './courseInfo.css';
@@ -12,6 +12,12 @@ export default function CourseInfo() {
 	const authorsList = useSelector(getAuthors);
 	const coursesList = useSelector(getCourses);
 	const courseId = coursesList.find((course) => course.id.includes(params.id));
+
+	const makeAuthorsListFormat = (list) => {
+		return list
+			.filter((item) => courseId.authors.includes(item.id))
+			.map((item) => <span key={item.id}>{item.name}</span>);
+	};
 
 	return (
 		<div className='courseInformation'>
@@ -32,16 +38,14 @@ export default function CourseInfo() {
 					</p>
 					<p className='information'>
 						Created:
-						<span className='info'>{formDate(courseId.creationDate)}</span>
+						<span className='info'>
+							{makeDateFormat(courseId.creationDate)}
+						</span>
 					</p>
 					<p className='information'>
 						Authors:
 						<span className='authorId'>
-							{authorsList
-								.filter((item) => courseId.authors.includes(item.id))
-								.map((item) => (
-									<span key={item.id}>{item.name}</span>
-								))}
+							{makeAuthorsListFormat(authorsList)}
 						</span>
 					</p>
 				</div>

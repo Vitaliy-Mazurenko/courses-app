@@ -28,6 +28,14 @@ export const IF_HAVE_ACCOUNT = 'If you have an account you can ';
 
 export const ENTER_COURSE_NAME = 'Enter course name or id...';
 
+export const ENTER_AUTHOR_NAME = 'Enter author name...';
+
+export const ENTER_DURATION = 'Enter duration in minutes...';
+
+export const ENTER_DESCRIPTION = 'Enter description';
+
+export const ENTER_TITLE = 'Enter title...';
+
 export const HOURS = ' hours';
 
 export const BACK_TO_COURSES = '< Back to courses';

@@ -1,4 +1,4 @@
-export default function formDate(iDate) {
+export default function makeDateFormat(iDate) {
 	const splitDate = iDate.split('/');
 	const createDate = splitDate.map((num) => {
 		if (num.length < 2) {

@@ -33,28 +33,18 @@ function Courses() {
 		}
 	}, [authorsList, dispatch]);
 
-	const searchValue = (val) => {
-		const even = (element) => element.id === val;
+	const searchValue = (value) => {
+		const even = (element) => element.id === value;
 
 		coursesList.some(even)
-			? setCourse(coursesList.filter((course) => course.id.includes(val)))
-			: val
+			? setCourse(coursesList.filter((course) => course.id.includes(value)))
+			: value
 			? setCourse(
 					coursesList.filter((course) =>
-						course.title.toLowerCase().includes(val.toLowerCase())
+						course.title.toLowerCase().includes(value.toLowerCase())
 					)
 			  )
 			: setCourse(coursesList);
-
-		// (coursesList.some(even) &&
-		// 	setCourse(coursesList.filter((course) => course.id.includes(val)))) ||
-		// 	(val &&
-		// 		setCourse(
-		// 			coursesList.filter((course) =>
-		// 				course.title.toLowerCase().includes(val.toLowerCase())
-		// 			)
-		// 		)) ||
-		// 	setCourse(coursesList);
 	};
 
 	return (

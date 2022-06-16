@@ -1,11 +1,10 @@
+import { URL } from '../../constants';
 import { getUser } from './reducer';
 
 export const thunkAction = async (dispatch, token) => {
-	const URL = 'http://localhost:4000/users/me';
-
 	try {
 		if (localStorage.getItem('token')) {
-			const response = await fetch(URL, {
+			const response = await fetch(`${URL}users/me`, {
 				method: 'GET',
 				body: JSON.stringify(),
 				headers: {
@@ -19,7 +18,7 @@ export const thunkAction = async (dispatch, token) => {
 					getUser(json.result.name, json.result.email, token, json.result.role)
 				);
 			} else {
-				console.warn(json);
+				console.log(json);
 			}
 		}
 	} catch (error) {
@@ -28,10 +27,8 @@ export const thunkAction = async (dispatch, token) => {
 };
 
 export const thunkActionLogout = async () => {
-	const URL = 'http://localhost:4000/logout';
-
 	try {
-		const response = await fetch(URL, {
+		const response = await fetch(`${URL}logout`, {
 			method: 'DELETE',
 			body: JSON.stringify(),
 			headers: {
