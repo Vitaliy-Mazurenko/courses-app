@@ -1,5 +1,4 @@
 import * as actions from './actionTypes';
-import { getUSER, delUSER } from './actionCreators';
 
 const userInitialState = {
 	isAuth: false,
@@ -24,8 +23,3 @@ export default function authorsReducer(state = userInitialState, action) {
 			return state;
 	}
 }
-
-export const getUser = (name, email, token, role) =>
-	getUSER(name, email, token, role);
-
-export const delUser = () => delUSER();

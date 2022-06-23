@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { addCourses } from '../../store/courses/reducer';
-
-import { addAuthors } from '../../store/authors/reducer';
+import { addAuthors } from '../../store/authors/actionCreators';
 import { getAuthors } from '../../selectors';
 import {
 	BTN_CREATE_COURSE,
@@ -15,10 +13,14 @@ import {
 	ENTER_DURATION,
 	ENTER_DESCRIPTION,
 	ENTER_TITLE,
+	INVERSE,
+	HOURS,
 } from '../../constants';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import pipeDuration from '../../helpers/pipeDuration';
+import authorsListFilter from '../../helpers/authorsListFilter';
+import authorsFilter from '../../helpers/authorsFilter';
 import { getCourses } from '../../selectors';
 import { getCoursesList, getAuthorsList } from '../../services';
 import { useParams } from 'react-router-dom';
@@ -27,133 +29,142 @@ import { thunkActionAuthorAdd } from '../../store/authors/thunk';
 import './courseFrom.css';
 
 function CourseFrom() {
-	const authorsList = useSelector(getAuthors);
-	const [authors, setAuthors] = useState(authorsList);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const params = useParams();
+	const authorsList = useSelector(getAuthors);
 	const coursesList = useSelector(getCourses);
-	const update = coursesList.find((course) => course.id.includes(params.id));
-	const [authorCourse, setAuthorCourse] = useState('');
+	const updateCourse = coursesList.find((course) =>
+		course.id.includes(params.id)
+	);
+	const [authorsCourse, setAuthorsCourse] = useState('');
 	const [newAuthor, setAuthor] = useState('');
-	const [fieldsCourse, setFieldsCourse] = useState({
+	const [courseFields, setCourseFields] = useState({
 		title: '',
 		description: '',
 		duration: '',
+		authors: authorsList,
 	});
-	const [checkTextArea, setCheckTextArea] = useState('');
-	const [checkAuthor, setCheckAuthor] = useState('');
-	const navigate = useNavigate();
-	const dispatch = useDispatch();
+	const [checkFields, setCheckFields] = useState({
+		checkDescription: '',
+		checkAuthor: '',
+	});
+
+	const handleKeyPress = (e) => {
+		const keyCode = e.keyCode || e.which;
+		const keyValue = String.fromCharCode(keyCode);
+		if (/[+e-]/.test(keyValue)) e.preventDefault();
+	};
 
 	const handleChange = (e) => {
 		const fieldValue = e.target.value;
-		setFieldsCourse({
-			...fieldsCourse,
+		setCourseFields({
+			...courseFields,
 			[e.target.name]: fieldValue,
 		});
 	};
 
 	useEffect(() => {
-		setAuthors(authors);
-	}, [authors]);
-
-	useEffect(() => {
-		if (update) {
-			setFieldsCourse({
-				title: update.title,
-				description: update.description,
-				duration: update.duration,
+		if (updateCourse) {
+			setCourseFields({
+				title: updateCourse.title,
+				description: updateCourse.description,
+				duration: updateCourse.duration,
+				authors: authorsListFilter(authorsList, updateCourse, INVERSE),
 			});
-			setAuthorCourse(
-				authorsList.filter((item) => update.authors.includes(item.id))
-			);
-			setAuthors(
-				authorsList.filter((author) => !update.authors.includes(author.id))
-			);
+			setAuthorsCourse(authorsListFilter(authorsList, updateCourse));
 		}
-	}, [update, authorsList]);
+	}, [updateCourse, authorsList]);
 
 	const addAuthor = (newAuthor) => {
 		dispatch(addAuthors(newAuthor));
 	};
 
-	const addCourse = () => {
-		const creationDuration = Number(fieldsCourse.duration);
-		const creationTitle = fieldsCourse.title;
-		const creationDescription = fieldsCourse.description;
+	const addCourse = async () => {
 		let authors = [];
-		authorCourse.forEach(function (i) {
+		authorsCourse.forEach(function (i) {
 			authors.push(i.id);
 		});
 		const newCourse = {
-			title: creationTitle,
-			description: creationDescription,
-			duration: creationDuration,
+			title: courseFields.title,
+			description: courseFields.description,
+			duration: Number(courseFields.duration),
 			authors,
 		};
 
-		if (update) {
-			(async () => {
-				await thunkActionUpdate(params.id, newCourse);
-				dispatch(getCoursesList());
-			})();
+		if (updateCourse) {
+			await thunkActionUpdate(dispatch, params.id, newCourse);
 		} else {
-			(async () => {
-				let response = await thunkActionAdd(newCourse);
-				dispatch(addCourses(response));
-			})();
+			await thunkActionAdd(dispatch, newCourse);
 		}
 	};
 
 	const handleCreate = (e) => {
 		e.preventDefault();
 		if (
-			!fieldsCourse.description ||
-			!fieldsCourse.title ||
-			!fieldsCourse.duration
+			!courseFields.description ||
+			!courseFields.title ||
+			!courseFields.duration
 		) {
 			alert('Please, fill in all fields');
-		} else if (fieldsCourse.description.length < 2) {
-			setCheckTextArea('text length should be at least 2 characters');
+		} else if (courseFields.description.length < 2) {
+			setCheckFields({
+				...checkFields,
+				checkDescription: 'text length should be at least 2 characters',
+			});
 		} else {
-			setCheckTextArea('');
 			addCourse();
 			navigate('/courses');
 			dispatch(getCoursesList());
 			dispatch(getAuthorsList());
+			setCheckFields({
+				...checkFields,
+				checkDescription: '',
+			});
 		}
 	};
 
-	function authorNameAdd(e) {
+	const authorNameAdd = async (e) => {
 		e.preventDefault();
 		if (newAuthor.length < 2) {
-			setCheckAuthor('author name length should be at least 2 characters');
+			setCheckFields({
+				...checkFields,
+				checkAuthor: 'author name length should be at least 2 characters',
+			});
 		} else {
-			(async () => {
-				let responseAuthor = await thunkActionAuthorAdd(newAuthor);
-				addAuthor(responseAuthor);
-				setCheckAuthor('');
-				setAuthors([...authors, responseAuthor]);
-				setAuthor('');
-			})();
+			let responseAuthor = await thunkActionAuthorAdd(newAuthor);
+			addAuthor(responseAuthor);
+			setCourseFields({
+				...courseFields,
+				authors: [...courseFields.authors, responseAuthor],
+			});
+			setCheckFields({
+				...checkFields,
+				checkAuthor: '',
+			});
+			setAuthor('');
 		}
-	}
+	};
 
 	function addCourseAuthor(e) {
 		e.preventDefault();
-		setAuthors(authors.filter((author) => author.id !== e.target.id));
-		setAuthorCourse([
-			...authorCourse,
-			...authors.filter((author) => author.id === e.target.id),
+		setCourseFields({
+			...courseFields,
+			authors: authorsFilter(courseFields.authors, e, INVERSE),
+		});
+		setAuthorsCourse([
+			...authorsCourse,
+			...authorsFilter(courseFields.authors, e),
 		]);
 	}
 
 	function delCourseAuthor(e) {
 		e.preventDefault();
-		setAuthorCourse(authorCourse.filter((author) => author.id !== e.target.id));
-		setAuthors([
-			...authors,
-			...authorCourse.filter((author) => author.id === e.target.id),
-		]);
+		setAuthorsCourse(authorsFilter(authorsCourse, e, INVERSE));
+		setCourseFields({
+			...courseFields,
+			authors: [...courseFields.authors, ...authorsFilter(authorsCourse, e)],
+		});
 	}
 
 	return (
@@ -166,14 +177,14 @@ function CourseFrom() {
 							minLength='2'
 							type='text'
 							placeholder={ENTER_TITLE}
-							value={fieldsCourse.title}
+							value={courseFields.title}
 							name='title'
 							onChange={handleChange}
 						/>
 						<Button
 							type='submit'
 							className='btn-create'
-							text={!update ? BTN_CREATE_COURSE : BTN_UPDATE_COURSE}
+							text={!updateCourse ? BTN_CREATE_COURSE : BTN_UPDATE_COURSE}
 							onClick={handleCreate}
 						/>
 					</div>
@@ -181,11 +192,11 @@ function CourseFrom() {
 					<textarea
 						type='text'
 						placeholder={ENTER_DESCRIPTION}
-						value={fieldsCourse.description}
+						value={courseFields.description}
 						name='description'
 						onChange={handleChange}
 					/>
-					<span className='validate'>{checkTextArea}</span>
+					<span className='validate'>{checkFields.checkDescription}</span>
 					<div className='authors-wrap'>
 						<div className='author-create'>
 							<h4 className='author-title'>Add author</h4>
@@ -196,7 +207,7 @@ function CourseFrom() {
 								value={newAuthor}
 								onChange={(e) => setAuthor(e.target.value)}
 							/>
-							<span className='validate'>{checkAuthor}</span>
+							<span className='validate'>{checkFields.checkAuthor}</span>
 							<Button
 								className='btn-create'
 								text={BTN_CREATE_AUTHOR}
@@ -207,19 +218,22 @@ function CourseFrom() {
 							<Input
 								type='number'
 								min='1'
+								step='1'
 								placeholder={ENTER_DURATION}
-								value={fieldsCourse.duration}
+								value={courseFields.duration}
 								name='duration'
+								onKeyPress={handleKeyPress}
 								onChange={handleChange}
 							/>
 							<span className='info-duration'>
-								Duration: <b>{pipeDuration(fieldsCourse.duration)}</b> hours
+								Duration: <b>{pipeDuration(courseFields.duration)}</b>
+								{HOURS}
 							</span>
 						</div>
 						<div className='authors'>
 							<h4 className='author-title'>Authors</h4>
 							<p className='info'>
-								{authors.map((item) => (
+								{courseFields.authors.map((item) => (
 									<span key={item.id} className='author-item'>
 										{' '}
 										{item.name}
@@ -234,10 +248,10 @@ function CourseFrom() {
 							</p>
 							<h4 className='author-title'>Course authors</h4>
 							<div className='author-title'>
-								{authorCourse.length === 0 && 'Author list is empty'}
+								{authorsCourse.length === 0 && 'Author list is empty'}
 							</div>
 							<p className='info'>
-								{[...authorCourse].map((item) => (
+								{[...authorsCourse].map((item) => (
 									<span key={item.id} className='author-item authors-course'>
 										{' '}
 										{item.name}

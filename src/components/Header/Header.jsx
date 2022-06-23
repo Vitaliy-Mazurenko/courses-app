@@ -5,9 +5,9 @@ import Logo from './components/Logo/Logo';
 import Button from '../../common/Button/Button';
 import { BUTTON_LOGOUT } from '../../constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { delUser } from '../../store/user/reducer';
 import { getUserName, getRole } from '../../selectors';
 import { thunkActionLogout } from '../../store/user/thunk';
+import clearLocalStorage from '../../helpers/clearLocalStorage';
 
 export default function Header() {
 	const userName = useSelector(getUserName);
@@ -17,9 +17,8 @@ export default function Header() {
 	const navigate = useNavigate();
 	const logOut = () => {
 		navigate('/login');
-		dispatch(delUser());
-		thunkActionLogout();
-		localStorage.clear();
+		thunkActionLogout(dispatch);
+		clearLocalStorage();
 	};
 
 	return (

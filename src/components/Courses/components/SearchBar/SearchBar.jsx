@@ -33,7 +33,7 @@ export default function SearchBar({ searchValue }) {
 				/>
 				<Button type='submit' text={BUTTON_TEXT} />
 			</form>
-			<Button text={BUTTON_ADD_COURSE} onClick={() => goToCreateCourseForm()} />
+			<Button text={BUTTON_ADD_COURSE} onClick={goToCreateCourseForm} />
 		</div>
 	);
 }

@@ -5,7 +5,7 @@ import { BUTTON_SHOW, HOURS } from '../../../../constants';
 import Button from '../../../../common/Button/Button.jsx';
 import pipeDuration from '../../../../helpers/pipeDuration';
 import makeDateFormat from '../../../../helpers/makeDateFormat';
-import { delCourses } from '../../../../store/courses/reducer';
+import { delCourses } from '../../../../store/courses/actionCreators';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRole } from '../../../../selectors';
 import { thunkActionDel } from '../../../../store/courses/thunk';

@@ -1,17 +1,11 @@
 import { URL } from '../../constants';
-import { getUser } from './reducer';
+import { getUser, delUser } from './actionCreators';
+import { meFetch } from '../../helpers/api';
 
 export const thunkAction = async (dispatch, token) => {
 	try {
 		if (localStorage.getItem('token')) {
-			const response = await fetch(`${URL}users/me`, {
-				method: 'GET',
-				body: JSON.stringify(),
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: localStorage.getItem('token'),
-				},
-			});
+			const response = await meFetch();
 			const json = await response.json();
 			if (response.ok) {
 				dispatch(
@@ -26,7 +20,7 @@ export const thunkAction = async (dispatch, token) => {
 	}
 };
 
-export const thunkActionLogout = async () => {
+export const thunkActionLogout = async (dispatch) => {
 	try {
 		const response = await fetch(`${URL}logout`, {
 			method: 'DELETE',
@@ -36,8 +30,8 @@ export const thunkActionLogout = async () => {
 				Authorization: localStorage.getItem('token'),
 			},
 		});
-		if (!response.ok) {
-			console.log(response);
+		if (response.ok) {
+			dispatch(delUser());
 		}
 	} catch (error) {
 		console.log(error.message);

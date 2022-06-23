@@ -2,6 +2,8 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import pipeDuration from '../../helpers/pipeDuration';
+import coursesFind from '../../helpers/coursesFind';
+import authorsListFormat from '../../helpers/authorsListFormat';
 import makeDateFormat from '../../helpers/makeDateFormat';
 import { getAuthors, getCourses } from '../../selectors';
 import { HOURS, BACK_TO_COURSES } from '../../constants';
@@ -11,12 +13,12 @@ export default function CourseInfo() {
 	const params = useParams();
 	const authorsList = useSelector(getAuthors);
 	const coursesList = useSelector(getCourses);
-	const courseId = coursesList.find((course) => course.id.includes(params.id));
+	const courseId = coursesFind(coursesList, params);
 
 	const makeAuthorsListFormat = (list) => {
-		return list
-			.filter((item) => courseId.authors.includes(item.id))
-			.map((item) => <span key={item.id}>{item.name}</span>);
+		return authorsListFormat(list, courseId).map((item) => (
+			<span key={item.id}>{item.name}</span>
+		));
 	};
 
 	return (

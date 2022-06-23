@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
-import { BUTTON_LOGIN, URL, IF_NOT_HAVE_ACCOUNT } from '../../constants';
+import { BUTTON_LOGIN, IF_NOT_HAVE_ACCOUNT } from '../../constants';
+import { userFetch } from '../../helpers/api';
 import { useDispatch } from 'react-redux';
-import { getUser } from '../../store/user/reducer';
+import { getUser } from '../../store/user/actionCreators';
 import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
@@ -18,7 +19,7 @@ export default function Login() {
 	const navigate = useNavigate();
 
 	const handleChange = (e) => {
-		const value = e.target.value;
+		const { value } = e.target;
 		setUser({
 			...user,
 			[e.target.name]: value,
@@ -28,13 +29,7 @@ export default function Login() {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		let response = await fetch(`${URL}login`, {
-			method: 'POST',
-			body: JSON.stringify(user),
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		}).catch((error) => {
+		let response = await userFetch(user).catch((error) => {
 			console.warn(error.message);
 			setError(error.message);
 		});

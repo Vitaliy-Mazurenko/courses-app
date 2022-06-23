@@ -1,17 +1,14 @@
 import { URL } from '../../constants';
-export const thunkActionAdd = async (newCourse) => {
+import { getCoursesList } from '../../services';
+import { addCourses } from './actionCreators';
+import { coursesFetch } from '../../helpers/api';
+
+export const thunkActionAdd = async (dispatch, newCourse) => {
 	try {
-		const response = await fetch(`${URL}courses/add`, {
-			method: 'POST',
-			body: JSON.stringify(newCourse),
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: localStorage.getItem('token'),
-			},
-		});
+		const response = await coursesFetch(newCourse);
 		const json = await response.json();
 		if (response.ok) {
-			return json.result;
+			dispatch(addCourses(json.result));
 		} else {
 			console.warn(json);
 		}
@@ -40,7 +37,7 @@ export const thunkActionDel = async (id) => {
 	}
 };
 
-export const thunkActionUpdate = async (id, updateCourse) => {
+export const thunkActionUpdate = async (dispatch, id, updateCourse) => {
 	try {
 		const response = await fetch(`${URL}courses/${id}`, {
 			method: 'PUT',
@@ -52,7 +49,7 @@ export const thunkActionUpdate = async (id, updateCourse) => {
 		});
 		const json = await response.json();
 		if (response.ok) {
-			return json.result;
+			dispatch(getCoursesList());
 		} else {
 			console.log(json);
 		}

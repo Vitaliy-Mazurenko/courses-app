@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { setCourses } from './store/courses/reducer';
-import { setAuthors } from './store/authors/reducer';
+import { setCourses } from './store/courses/actionCreators';
+import { setAuthors } from './store/authors/actionCreators';
 import { URL } from './constants';
 
 export const getCoursesList = (searchQuery = 'courses/all') => {

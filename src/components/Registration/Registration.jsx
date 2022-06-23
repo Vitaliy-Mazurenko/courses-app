@@ -3,7 +3,8 @@ import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
-import { BUTTON_REG, URL, IF_HAVE_ACCOUNT } from '../../constants';
+import { BUTTON_REG, IF_HAVE_ACCOUNT, QUERY_REGISTER } from '../../constants';
+import { userFetch } from '../../helpers/api';
 
 export default function Registration() {
 	const [newUser, setUserState] = useState({
@@ -26,13 +27,7 @@ export default function Registration() {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		return await fetch(`${URL}register`, {
-			method: 'POST',
-			body: JSON.stringify(newUser),
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		})
+		return await userFetch(newUser, QUERY_REGISTER)
 			.then((response) => response.json())
 			.then((json) => {
 				if (json.successful) {

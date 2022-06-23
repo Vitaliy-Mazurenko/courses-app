@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCoursesList, getAuthorsList } from '../../services';
 import { getCourses, getAuthors, isFetch } from '../../selectors';
+import searchByIdAndTitle from '../../helpers/searchByIdAndTitle';
 import CourseCard from './components/CourseCard/CourseCard';
 import SearchBar from './components/SearchBar/SearchBar';
 import './courses.css';
@@ -14,7 +15,7 @@ function Courses() {
 	const [courses, setCourse] = useState(coursesList);
 
 	useEffect(() => {
-		if (!!courses.length) {
+		if (courses.length) {
 			setCourse(courses);
 		}
 	}, [courses]);
@@ -34,16 +35,8 @@ function Courses() {
 	}, [authorsList, dispatch]);
 
 	const searchValue = (value) => {
-		const even = (element) => element.id === value;
-
-		coursesList.some(even)
-			? setCourse(coursesList.filter((course) => course.id.includes(value)))
-			: value
-			? setCourse(
-					coursesList.filter((course) =>
-						course.title.toLowerCase().includes(value.toLowerCase())
-					)
-			  )
+		value
+			? setCourse(searchByIdAndTitle(coursesList, value))
 			: setCourse(coursesList);
 	};
 

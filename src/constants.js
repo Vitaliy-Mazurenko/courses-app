@@ -39,3 +39,7 @@ export const ENTER_TITLE = 'Enter title...';
 export const HOURS = ' hours';
 
 export const BACK_TO_COURSES = '< Back to courses';
+
+export const INVERSE = { inverse: true };
+
+export const QUERY_REGISTER = 'register';
