@@ -1,6 +1,7 @@
 import { URL } from '../../constants';
 import { getUser, delUser } from './actionCreators';
 import { meFetch } from '../../helpers/api';
+import { localStorageAPI } from '../../helpers/localStorageAPI';
 
 export const thunkAction = async (dispatch, token) => {
 	try {
@@ -27,7 +28,7 @@ export const thunkActionLogout = async (dispatch) => {
 			body: JSON.stringify(),
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: localStorage.getItem('token'),
+				Authorization: localStorageAPI.getUserToken(),
 			},
 		});
 		if (response.ok) {

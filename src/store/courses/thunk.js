@@ -2,6 +2,7 @@ import { URL } from '../../constants';
 import { getCoursesList } from '../../services';
 import { addCourses } from './actionCreators';
 import { coursesFetch } from '../../helpers/api';
+import { localStorageAPI } from '../../helpers/localStorageAPI';
 
 export const thunkActionAdd = async (dispatch, newCourse) => {
 	try {
@@ -23,7 +24,7 @@ export const thunkActionDel = async (id) => {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: localStorage.getItem('token'),
+				Authorization: localStorageAPI.getUserToken(),
 			},
 		});
 		const json = await response.json();
@@ -44,7 +45,7 @@ export const thunkActionUpdate = async (dispatch, id, updateCourse) => {
 			body: JSON.stringify(updateCourse),
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: localStorage.getItem('token'),
+				Authorization: localStorageAPI.getUserToken(),
 			},
 		});
 		const json = await response.json();

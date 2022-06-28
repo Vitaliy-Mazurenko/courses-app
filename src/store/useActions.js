@@ -1,16 +1,22 @@
 import { bindActionCreators } from 'redux';
 import { useDispatch } from 'react-redux';
-import { useMemo } from 'react';
+import { coursesActionCreators } from './courses';
+import { authorsActionCreators } from './authors';
+import { userActionCreators } from './user';
 
-export function useActions(actions, deps) {
+const allActionCreators = {
+	...authorsActionCreators,
+	...coursesActionCreators,
+	...userActionCreators,
+};
+
+export function useActions() {
 	const dispatch = useDispatch();
-	return useMemo(
-		() => {
-			if (Array.isArray(actions)) {
-				return actions.map((a) => bindActionCreators(a, dispatch));
-			}
-			return bindActionCreators(actions, dispatch);
-		},
-		deps ? [dispatch, ...deps] : [dispatch]
+	return Object.entries(allActionCreators).reduce(
+		(acc, [name, action]) => ({
+			...acc,
+			[name]: bindActionCreators(action, dispatch),
+		}),
+		{}
 	);
 }

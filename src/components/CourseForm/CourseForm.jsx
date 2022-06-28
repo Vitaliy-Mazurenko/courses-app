@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { addAuthors } from '../../store/authors/actionCreators';
 import { getAuthors } from '../../selectors';
 import {
 	BTN_CREATE_COURSE,
@@ -26,9 +25,11 @@ import { getCoursesList, getAuthorsList } from '../../services';
 import { useParams } from 'react-router-dom';
 import { thunkActionAdd, thunkActionUpdate } from '../../store/courses/thunk';
 import { thunkActionAuthorAdd } from '../../store/authors/thunk';
-import './courseFrom.css';
+import { useActions } from '../../store/useActions';
+import './CourseForm.css';
 
-function CourseFrom() {
+function CourseForm() {
+	const bindedActions = useActions();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const params = useParams();
@@ -77,14 +78,13 @@ function CourseFrom() {
 	}, [updateCourse, authorsList]);
 
 	const addAuthor = (newAuthor) => {
-		dispatch(addAuthors(newAuthor));
+		bindedActions.addAuthors(newAuthor);
 	};
 
 	const addCourse = async () => {
-		let authors = [];
-		authorsCourse.forEach(function (i) {
-			authors.push(i.id);
-		});
+		const authors = authorsCourse.reduce((acc, author) => {
+			return [...acc, author.id];
+		}, []);
 		const newCourse = {
 			title: courseFields.title,
 			description: courseFields.description,
@@ -272,4 +272,4 @@ function CourseFrom() {
 	);
 }
 
-export default CourseFrom;
+export default CourseForm;

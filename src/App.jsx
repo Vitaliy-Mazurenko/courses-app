@@ -9,16 +9,17 @@ import Login from './components/Login/Login';
 import Header from './components/Header/Header';
 import Registration from './components/Registration/Registration';
 import Courses from './components/Courses/Courses';
-import CourseFrom from './components/CourseFrom/CourseFrom';
+import CourseForm from './components/CourseForm/CourseForm';
 import CourseInfo from './components/CourseInfo/CourseInfo';
 import PrivateRouter from './components/PrivateRouter/PrivateRouter';
 import { useDispatch, useSelector } from 'react-redux';
 import { thunkAction } from './store/user/thunk';
 import { getToken } from './selectors';
+import { localStorageAPI } from './helpers/localStorageAPI';
 import './App.css';
 
 function App() {
-	const [token, setToken] = useState(localStorage.getItem('token'));
+	const [token, setToken] = useState(localStorageAPI.getUserToken());
 	const userToken = useSelector(getToken);
 	const dispatch = useDispatch();
 
@@ -50,7 +51,7 @@ function App() {
 						path='/courses/add'
 						element={
 							<PrivateRouter>
-								<CourseFrom />
+								<CourseForm />
 							</PrivateRouter>
 						}
 					/>
@@ -58,7 +59,7 @@ function App() {
 						path='/courses/update/:id'
 						element={
 							<PrivateRouter>
-								<CourseFrom />
+								<CourseForm />
 							</PrivateRouter>
 						}
 					/>

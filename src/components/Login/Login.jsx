@@ -5,9 +5,9 @@ import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import { BUTTON_LOGIN, IF_NOT_HAVE_ACCOUNT } from '../../constants';
 import { userFetch } from '../../helpers/api';
-import { useDispatch } from 'react-redux';
-import { getUser } from '../../store/user/actionCreators';
+import { useActions } from '../../store/useActions';
 import { useNavigate } from 'react-router-dom';
+import { localStorageAPI } from '../../helpers/localStorageAPI';
 
 export default function Login() {
 	const [error, setError] = useState('');
@@ -15,7 +15,7 @@ export default function Login() {
 		email: '',
 		password: '',
 	});
-	const dispatch = useDispatch();
+	const bindedActions = useActions();
 	const navigate = useNavigate();
 
 	const handleChange = (e) => {
@@ -38,9 +38,12 @@ export default function Login() {
 			const result = await response.json();
 			if (response.ok) {
 				navigate('/courses/');
-				dispatch(getUser(result.user.name, result.user.email, result.result));
-				localStorage.setItem('token', result.result);
-				localStorage.setItem('name', result.user.name);
+				bindedActions.getUser(
+					result.user.name,
+					result.user.email,
+					result.result
+				);
+				localStorageAPI.setToken(result.result);
 			} else if (result.result) {
 				setError(result.result);
 			} else {

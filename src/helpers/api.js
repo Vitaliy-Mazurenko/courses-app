@@ -1,4 +1,5 @@
 import { URL } from '../constants';
+import { localStorageAPI } from '../helpers/localStorageAPI';
 
 export const userFetch = async (user, searchQuery = 'login') => {
 	return await fetch(`${URL}${searchQuery}`, {
@@ -16,7 +17,7 @@ export const authorsFetch = async (author, searchQuery = 'authors/add') => {
 		body: JSON.stringify({ name: author }),
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: localStorage.getItem('token'),
+			Authorization: localStorageAPI.getUserToken(),
 		},
 	});
 };
@@ -27,7 +28,7 @@ export const coursesFetch = async (course, searchQuery = 'courses/add') => {
 		body: JSON.stringify(course),
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: localStorage.getItem('token'),
+			Authorization: localStorageAPI.getUserToken(),
 		},
 	});
 };
@@ -38,7 +39,7 @@ export const meFetch = async (searchQuery = 'users/me') => {
 		body: JSON.stringify(),
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: localStorage.getItem('token'),
+			Authorization: localStorageAPI.getUserToken(),
 		},
 	});
 };

@@ -5,16 +5,16 @@ import { BUTTON_SHOW, HOURS } from '../../../../constants';
 import Button from '../../../../common/Button/Button.jsx';
 import pipeDuration from '../../../../helpers/pipeDuration';
 import makeDateFormat from '../../../../helpers/makeDateFormat';
-import { delCourses } from '../../../../store/courses/actionCreators';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getRole } from '../../../../selectors';
 import { thunkActionDel } from '../../../../store/courses/thunk';
+import { useActions } from '../../../../store/useActions';
 import './courseCard.css';
 
 const CourseCard = ({ course, authorsList }) => {
 	const isAdmin = useSelector(getRole);
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
+	const bindedActions = useActions();
 
 	const authorsListFormatting = (list) => {
 		return list
@@ -29,7 +29,7 @@ const CourseCard = ({ course, authorsList }) => {
 
 	const deleteCourse = (id) => {
 		if (id) {
-			dispatch(delCourses(id));
+			bindedActions.delCourses(id);
 			thunkActionDel(id);
 		}
 	};
