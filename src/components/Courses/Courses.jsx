@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCoursesList, getAuthorsList } from '../../services';
+import { getAuthorsList } from '../../store/authors/thunk';
+import { getCoursesList } from '../../store/courses/thunk';
 import { getCourses, getAuthors, isFetch } from '../../selectors';
 import searchByIdAndTitle from '../../helpers/searchByIdAndTitle';
 import CourseCard from './components/CourseCard/CourseCard';

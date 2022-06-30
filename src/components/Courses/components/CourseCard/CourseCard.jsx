@@ -7,8 +7,8 @@ import pipeDuration from '../../../../helpers/pipeDuration';
 import makeDateFormat from '../../../../helpers/makeDateFormat';
 import { useSelector } from 'react-redux';
 import { getRole } from '../../../../selectors';
-import { thunkActionDel } from '../../../../store/courses/thunk';
-import { useActions } from '../../../../store/useActions';
+import { thunkCourseDel } from '../../../../store/courses/thunk';
+import { useActions } from '../../../../hooks/useActions';
 import './courseCard.css';
 
 const CourseCard = ({ course, authorsList }) => {
@@ -30,7 +30,7 @@ const CourseCard = ({ course, authorsList }) => {
 	const deleteCourse = (id) => {
 		if (id) {
 			bindedActions.delCourses(id);
-			thunkActionDel(id);
+			thunkCourseDel(id);
 		}
 	};
 

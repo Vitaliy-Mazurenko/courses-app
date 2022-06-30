@@ -20,6 +20,11 @@ export default function coursesReducer(state = coursesInitialState, action) {
 					),
 				],
 			};
+		case actions.UPDATE_COURSE:
+			const withoutCourse = state.courses.filter(
+				(course) => course.id !== action.payload.id
+			);
+			return [...withoutCourse, action.payload];
 		default:
 			return state;
 	}

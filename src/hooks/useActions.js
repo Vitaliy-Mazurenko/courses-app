@@ -1,8 +1,8 @@
 import { bindActionCreators } from 'redux';
 import { useDispatch } from 'react-redux';
-import { coursesActionCreators } from './courses';
-import { authorsActionCreators } from './authors';
-import { userActionCreators } from './user';
+import { coursesActionCreators } from '../store/courses';
+import { authorsActionCreators } from '../store/authors';
+import { userActionCreators } from '../store/user';
 
 const allActionCreators = {
 	...authorsActionCreators,

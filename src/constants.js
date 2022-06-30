@@ -43,3 +43,6 @@ export const BACK_TO_COURSES = '< Back to courses';
 export const INVERSE = { inverse: true };
 
 export const QUERY_REGISTER = 'register';
+
+export const POST_SUCCESSFUL_STATUS = 201;
+export const GET_SUCCESSFUL_STATUS = 200;

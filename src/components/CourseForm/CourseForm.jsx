@@ -21,11 +21,14 @@ import pipeDuration from '../../helpers/pipeDuration';
 import authorsListFilter from '../../helpers/authorsListFilter';
 import authorsFilter from '../../helpers/authorsFilter';
 import { getCourses } from '../../selectors';
-import { getCoursesList, getAuthorsList } from '../../services';
 import { useParams } from 'react-router-dom';
-import { thunkActionAdd, thunkActionUpdate } from '../../store/courses/thunk';
-import { thunkActionAuthorAdd } from '../../store/authors/thunk';
-import { useActions } from '../../store/useActions';
+import {
+	thunkCourseAdd,
+	thunkCourseUpdate,
+	getCoursesList,
+} from '../../store/courses/thunk';
+import { thunkAuthorAdd, getAuthorsList } from '../../store/authors/thunk';
+import { useActions } from '../../hooks/useActions';
 import './CourseForm.css';
 
 function CourseForm() {
@@ -93,15 +96,17 @@ function CourseForm() {
 		};
 
 		if (updateCourse) {
-			await thunkActionUpdate(dispatch, params.id, newCourse);
+			await thunkCourseUpdate(dispatch, params.id, newCourse);
 		} else {
-			await thunkActionAdd(dispatch, newCourse);
+			await thunkCourseAdd(dispatch, newCourse);
 		}
 	};
 
 	const handleCreate = (e) => {
 		e.preventDefault();
-		if (
+		if (!authorsCourse) {
+			alert('Please, add authors course');
+		} else if (
 			!courseFields.description ||
 			!courseFields.title ||
 			!courseFields.duration
@@ -132,7 +137,7 @@ function CourseForm() {
 				checkAuthor: 'author name length should be at least 2 characters',
 			});
 		} else {
-			let responseAuthor = await thunkActionAuthorAdd(newAuthor);
+			let responseAuthor = await thunkAuthorAdd(newAuthor);
 			addAuthor(responseAuthor);
 			setCourseFields({
 				...courseFields,

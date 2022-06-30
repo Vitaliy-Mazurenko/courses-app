@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import { BUTTON_LOGIN, IF_NOT_HAVE_ACCOUNT } from '../../constants';
-import { userFetch } from '../../helpers/api';
-import { useActions } from '../../store/useActions';
+import { userFetch } from '../../services';
+import { useActions } from '../../hooks/useActions';
 import { useNavigate } from 'react-router-dom';
 import { localStorageAPI } from '../../helpers/localStorageAPI';
 
