@@ -4,21 +4,21 @@ import { useNavigate } from 'react-router-dom';
 import Logo from './components/Logo/Logo';
 import Button from '../../common/Button/Button';
 import { BUTTON_LOGOUT } from '../../constants';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getUserName, getRole } from '../../selectors';
-import { thunkActionLogout } from '../../store/user/thunk';
+import { useThunks } from '../../hooks/useThunks';
 import { localStorageAPI } from '../../helpers/localStorageAPI';
 
 export default function Header() {
 	const userName = useSelector(getUserName);
 	const userRole = useSelector(getRole);
 	const user = userName || userRole;
-	const dispatch = useDispatch();
+	const bindedThunks = useThunks();
 	const navigate = useNavigate();
 	const logOut = () => {
-		navigate('/login');
-		thunkActionLogout(dispatch);
+		bindedThunks.thunkActionLogout();
 		localStorageAPI.clear();
+		navigate('/login');
 	};
 
 	return (

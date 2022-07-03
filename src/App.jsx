@@ -12,8 +12,8 @@ import Courses from './components/Courses/Courses';
 import CourseForm from './components/CourseForm/CourseForm';
 import CourseInfo from './components/CourseInfo/CourseInfo';
 import PrivateRouter from './components/PrivateRouter/PrivateRouter';
-import { useDispatch, useSelector } from 'react-redux';
-import { thunkAction } from './store/user/thunk';
+import { useSelector } from 'react-redux';
+import { useThunks } from './hooks/useThunks';
 import { getToken } from './selectors';
 import { localStorageAPI } from './helpers/localStorageAPI';
 import './App.css';
@@ -21,16 +21,16 @@ import './App.css';
 function App() {
 	const [token, setToken] = useState(localStorageAPI.getUserToken());
 	const userToken = useSelector(getToken);
-	const dispatch = useDispatch();
+	const bindedThunks = useThunks();
 
 	useEffect(() => {
 		if (token) {
 			setToken(userToken);
-			thunkAction(dispatch, token);
+			bindedThunks.thunkCurrentUser(token);
 		} else {
 			setToken(userToken);
 		}
-	}, [token, userToken, dispatch]);
+	}, [bindedThunks, token, userToken]);
 
 	return (
 		<div className='App'>

@@ -1,26 +1,18 @@
 import { getUser, delUser } from './actionCreators';
 import { meFetch, logout } from '../../services';
 
-export const thunkAction = async (dispatch, token) => {
+export const thunkCurrentUser = (token) => async (dispatch) => {
 	if (token) {
-		try {
-			const response = await meFetch();
-			if (response) {
-				dispatch(getUser(response.name, response.email, token, response.role));
-			}
-		} catch (error) {
-			console.warn(error.message);
+		const response = await meFetch();
+		if (response) {
+			dispatch(getUser(response.name, response.email, token, response.role));
 		}
 	}
 };
 
-export const thunkActionLogout = async (dispatch) => {
-	try {
-		const response = await logout();
-		if (response) {
-			dispatch(delUser());
-		}
-	} catch (error) {
-		console.log(error.message);
+export const thunkActionLogout = () => async (dispatch) => {
+	const response = await logout();
+	if (response) {
+		dispatch(delUser());
 	}
 };

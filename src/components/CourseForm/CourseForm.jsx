@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getAuthors } from '../../selectors';
 import {
 	BTN_CREATE_COURSE,
@@ -22,18 +22,11 @@ import authorsListFilter from '../../helpers/authorsListFilter';
 import authorsFilter from '../../helpers/authorsFilter';
 import { getCourses } from '../../selectors';
 import { useParams } from 'react-router-dom';
-import {
-	thunkCourseAdd,
-	thunkCourseUpdate,
-	getCoursesList,
-} from '../../store/courses/thunk';
-import { thunkAuthorAdd, getAuthorsList } from '../../store/authors/thunk';
-import { useActions } from '../../hooks/useActions';
+import { useThunks } from '../../hooks/useThunks';
 import './CourseForm.css';
 
 function CourseForm() {
-	const bindedActions = useActions();
-	const dispatch = useDispatch();
+	const bindedThunks = useThunks();
 	const navigate = useNavigate();
 	const params = useParams();
 	const authorsList = useSelector(getAuthors);
@@ -80,10 +73,6 @@ function CourseForm() {
 		}
 	}, [updateCourse, authorsList]);
 
-	const addAuthor = (newAuthor) => {
-		bindedActions.addAuthors(newAuthor);
-	};
-
 	const addCourse = async () => {
 		const authors = authorsCourse.reduce((acc, author) => {
 			return [...acc, author.id];
@@ -96,9 +85,9 @@ function CourseForm() {
 		};
 
 		if (updateCourse) {
-			await thunkCourseUpdate(dispatch, params.id, newCourse);
+			await bindedThunks.thunkCourseUpdate(params.id, newCourse);
 		} else {
-			await thunkCourseAdd(dispatch, newCourse);
+			await bindedThunks.thunkCourseAdd(newCourse);
 		}
 	};
 
@@ -120,8 +109,8 @@ function CourseForm() {
 		} else {
 			addCourse();
 			navigate('/courses');
-			dispatch(getCoursesList());
-			dispatch(getAuthorsList());
+			bindedThunks.getCoursesList();
+			bindedThunks.getAuthorsList();
 			setCheckFields({
 				...checkFields,
 				checkDescription: '',
@@ -137,8 +126,7 @@ function CourseForm() {
 				checkAuthor: 'author name length should be at least 2 characters',
 			});
 		} else {
-			let responseAuthor = await thunkAuthorAdd(newAuthor);
-			addAuthor(responseAuthor);
+			let responseAuthor = await bindedThunks.thunkAuthorAdd(newAuthor);
 			setCourseFields({
 				...courseFields,
 				authors: [...courseFields.authors, responseAuthor],

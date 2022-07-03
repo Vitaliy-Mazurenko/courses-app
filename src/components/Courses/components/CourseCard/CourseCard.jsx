@@ -7,14 +7,13 @@ import pipeDuration from '../../../../helpers/pipeDuration';
 import makeDateFormat from '../../../../helpers/makeDateFormat';
 import { useSelector } from 'react-redux';
 import { getRole } from '../../../../selectors';
-import { thunkCourseDel } from '../../../../store/courses/thunk';
-import { useActions } from '../../../../hooks/useActions';
+import { useThunks } from '../../../../hooks/useThunks';
 import './courseCard.css';
 
 const CourseCard = ({ course, authorsList }) => {
 	const isAdmin = useSelector(getRole);
 	const navigate = useNavigate();
-	const bindedActions = useActions();
+	const bindedThunks = useThunks();
 
 	const authorsListFormatting = (list) => {
 		return list
@@ -29,8 +28,7 @@ const CourseCard = ({ course, authorsList }) => {
 
 	const deleteCourse = (id) => {
 		if (id) {
-			bindedActions.delCourses(id);
-			thunkCourseDel(id);
+			bindedThunks.thunkCourseDel(id);
 		}
 	};
 

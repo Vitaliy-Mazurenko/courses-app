@@ -4,40 +4,37 @@ import {
 	deleteCourse,
 	updateCourseFetch,
 } from '../../services';
-import { setCourses, addCourses, updateCourse } from './actionCreators';
+import {
+	setCourses,
+	addCourses,
+	updateCourse,
+	delCourses,
+} from './actionCreators';
 
-export const getCoursesList = () => {
-	return async (dispatch) => {
-		const response = await coursesListFetch();
+export const getCoursesList = () => async (dispatch) => {
+	const response = await coursesListFetch();
+	if (response) {
 		dispatch(setCourses(response.data.result));
-	};
+	}
 };
 
-export const thunkCourseAdd = async (dispatch, newCourse) => {
-	try {
-		const response = await courseFetch(newCourse);
+export const thunkCourseAdd = (newCourse) => async (dispatch) => {
+	const response = await courseFetch(newCourse);
+	if (response) {
 		dispatch(addCourses(response.result));
-	} catch (error) {
-		console.warn(error.message);
 	}
 };
 
-export const thunkCourseDel = async (id) => {
-	try {
-		const response = await deleteCourse(id);
-		return response.result;
-	} catch (error) {
-		console.warn(error.message);
+export const thunkCourseDel = (id) => async (dispatch) => {
+	const response = await deleteCourse(id);
+	if (response) {
+		dispatch(delCourses(id));
 	}
 };
 
-export const thunkCourseUpdate = async (dispatch, id, course) => {
-	try {
-		const response = await updateCourseFetch(id, course);
-		if (response) {
-			dispatch(updateCourse(response.result));
-		}
-	} catch (error) {
-		console.warn(error.message);
+export const thunkCourseUpdate = (id, course) => async (dispatch) => {
+	const response = await updateCourseFetch(id, course);
+	if (response) {
+		dispatch(updateCourse(response.result));
 	}
 };
