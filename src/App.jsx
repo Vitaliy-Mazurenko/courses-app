@@ -56,14 +56,14 @@ function App() {
 						}
 					/>
 					<Route
-						path='/courses/update/:id'
+						path='/courses/update/:courseId'
 						element={
 							<PrivateRouter>
 								<CourseForm />
 							</PrivateRouter>
 						}
 					/>
-					<Route exact path='/courses/:id' element={<CourseInfo />} />
+					<Route exact path='/courses/:courseId' element={<CourseInfo />} />
 				</Routes>
 			</Router>
 		</div>

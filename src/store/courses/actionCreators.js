@@ -1,12 +1,18 @@
 import * as actions from './actionTypes';
 
-export const setCourses = (payload) => ({ type: actions.SET_COURSES, payload });
+export const setCourses = (courses) => ({
+	type: actions.SET_COURSES,
+	payload: courses,
+});
 
-export const addCourses = (payload) => ({ type: actions.ADD_COURSES, payload });
+export const addCourses = (course) => ({
+	type: actions.ADD_COURSES,
+	payload: course,
+});
 
-export const delCourses = (payload) => ({ type: actions.DEL_COURSES, payload });
+export const delCourses = (id) => ({ type: actions.DEL_COURSES, payload: id });
 
-export const updateCourse = (payload) => ({
+export const updateCourse = (course) => ({
 	type: actions.UPDATE_COURSE,
-	payload,
+	payload: course,
 });

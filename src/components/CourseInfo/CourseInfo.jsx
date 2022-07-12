@@ -30,7 +30,7 @@ export default function CourseInfo() {
 				<div className='about'>
 					<p className='aboutId'>
 						<b>ID: </b>
-						{params.id}
+						{params.courseId}
 					</p>
 					<p className='information'>
 						Duration:

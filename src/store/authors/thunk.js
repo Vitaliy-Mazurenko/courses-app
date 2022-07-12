@@ -12,6 +12,5 @@ export const thunkAuthorAdd = (newAuthor) => async (dispatch) => {
 	const response = await authorsFetch(newAuthor);
 	if (response) {
 		dispatch(addAuthors(response.result));
-		return response.result;
 	}
 };

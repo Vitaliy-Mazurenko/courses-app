@@ -1,3 +1,3 @@
 export default function coursesFind(coursesList, params) {
-	return coursesList.find((course) => course.id.includes(params.id));
+	return coursesList.find((course) => course.id.includes(params.courseId));
 }

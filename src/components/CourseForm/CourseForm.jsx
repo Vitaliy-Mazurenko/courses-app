@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { getAuthors } from '../../selectors';
 import {
 	BTN_CREATE_COURSE,
 	BTN_CREATE_AUTHOR,
@@ -12,36 +11,39 @@ import {
 	ENTER_DURATION,
 	ENTER_DESCRIPTION,
 	ENTER_TITLE,
-	INVERSE,
 	HOURS,
 } from '../../constants';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import pipeDuration from '../../helpers/pipeDuration';
-import authorsListFilter from '../../helpers/authorsListFilter';
 import authorsFilter from '../../helpers/authorsFilter';
-import { getCourses } from '../../selectors';
+import {
+	getAvailableAuthors,
+	getCourseAuthors,
+	getCourseById,
+} from '../../selectors';
 import { useParams } from 'react-router-dom';
 import { useThunks } from '../../hooks/useThunks';
 import './CourseForm.css';
 
+const newCourseInitialForm = {
+	title: '',
+	description: '',
+	duration: '',
+	authors: [],
+};
+
 function CourseForm() {
 	const bindedThunks = useThunks();
 	const navigate = useNavigate();
-	const params = useParams();
-	const authorsList = useSelector(getAuthors);
-	const coursesList = useSelector(getCourses);
-	const updateCourse = coursesList.find((course) =>
-		course.id.includes(params.id)
-	);
-	const [authorsCourse, setAuthorsCourse] = useState('');
+	const { courseId } = useParams();
+	const preloadedCourse = useSelector(getCourseById(courseId));
+	const courseInitialForm = courseId ? preloadedCourse : newCourseInitialForm;
+	const [courseForm, setCourseForm] = useState(courseInitialForm);
+	const { title, description, duration, authors } = courseForm;
 	const [newAuthor, setAuthor] = useState('');
-	const [courseFields, setCourseFields] = useState({
-		title: '',
-		description: '',
-		duration: '',
-		authors: authorsList,
-	});
+	const availableAuthors = useSelector(getAvailableAuthors(authors));
+	const courseAuthors = useSelector(getCourseAuthors(authors));
 	const [checkFields, setCheckFields] = useState({
 		checkDescription: '',
 		checkAuthor: '',
@@ -55,53 +57,35 @@ function CourseForm() {
 
 	const handleChange = (e) => {
 		const fieldValue = e.target.value;
-		setCourseFields({
-			...courseFields,
+		setCourseForm({
+			...courseForm,
 			[e.target.name]: fieldValue,
 		});
 	};
 
-	useEffect(() => {
-		if (updateCourse) {
-			setCourseFields({
-				title: updateCourse.title,
-				description: updateCourse.description,
-				duration: updateCourse.duration,
-				authors: authorsListFilter(authorsList, updateCourse, INVERSE),
-			});
-			setAuthorsCourse(authorsListFilter(authorsList, updateCourse));
-		}
-	}, [updateCourse, authorsList]);
-
 	const addCourse = async () => {
-		const authors = authorsCourse.reduce((acc, author) => {
-			return [...acc, author.id];
-		}, []);
 		const newCourse = {
-			title: courseFields.title,
-			description: courseFields.description,
-			duration: Number(courseFields.duration),
+			title,
+			description,
+			duration: Number(duration),
 			authors,
 		};
-
-		if (updateCourse) {
-			await bindedThunks.thunkCourseUpdate(params.id, newCourse);
+		if (courseId) {
+			await bindedThunks.thunkCourseUpdate(courseId, newCourse);
 		} else {
 			await bindedThunks.thunkCourseAdd(newCourse);
 		}
 	};
 
+	const isFormValid = () => {
+		return !description || !title || !Number(duration) || !authors.length;
+	};
+
 	const handleCreate = (e) => {
 		e.preventDefault();
-		if (!authorsCourse) {
-			alert('Please, add authors course');
-		} else if (
-			!courseFields.description ||
-			!courseFields.title ||
-			!courseFields.duration
-		) {
+		if (isFormValid()) {
 			alert('Please, fill in all fields');
-		} else if (courseFields.description.length < 2) {
+		} else if (description.length < 2) {
 			setCheckFields({
 				...checkFields,
 				checkDescription: 'text length should be at least 2 characters',
@@ -118,7 +102,7 @@ function CourseForm() {
 		}
 	};
 
-	const authorNameAdd = async (e) => {
+	const authorNameAdd = (e) => {
 		e.preventDefault();
 		if (newAuthor.length < 2) {
 			setCheckFields({
@@ -126,11 +110,7 @@ function CourseForm() {
 				checkAuthor: 'author name length should be at least 2 characters',
 			});
 		} else {
-			let responseAuthor = await bindedThunks.thunkAuthorAdd(newAuthor);
-			setCourseFields({
-				...courseFields,
-				authors: [...courseFields.authors, responseAuthor],
-			});
+			bindedThunks.thunkAuthorAdd(newAuthor);
 			setCheckFields({
 				...checkFields,
 				checkAuthor: '',
@@ -139,25 +119,18 @@ function CourseForm() {
 		}
 	};
 
-	function addCourseAuthor(e) {
-		e.preventDefault();
-		setCourseFields({
-			...courseFields,
-			authors: authorsFilter(courseFields.authors, e, INVERSE),
+	function addCourseAuthor(authorId) {
+		setCourseForm({
+			...courseForm,
+			authors: [...authors, authorId],
 		});
-		setAuthorsCourse([
-			...authorsCourse,
-			...authorsFilter(courseFields.authors, e),
-		]);
 	}
 
-	function delCourseAuthor(e) {
-		e.preventDefault();
-		setAuthorsCourse(authorsFilter(authorsCourse, e, INVERSE));
-		setCourseFields({
-			...courseFields,
-			authors: [...courseFields.authors, ...authorsFilter(authorsCourse, e)],
-		});
+	function delCourseAuthor(authorId) {
+		setCourseForm((prevState) => ({
+			...prevState,
+			authors: [...authorsFilter(prevState.authors, authorId, 'ID')],
+		}));
 	}
 
 	return (
@@ -170,14 +143,14 @@ function CourseForm() {
 							minLength='2'
 							type='text'
 							placeholder={ENTER_TITLE}
-							value={courseFields.title}
+							value={title}
 							name='title'
 							onChange={handleChange}
 						/>
 						<Button
 							type='submit'
 							className='btn-create'
-							text={!updateCourse ? BTN_CREATE_COURSE : BTN_UPDATE_COURSE}
+							text={!courseId ? BTN_CREATE_COURSE : BTN_UPDATE_COURSE}
 							onClick={handleCreate}
 						/>
 					</div>
@@ -185,7 +158,7 @@ function CourseForm() {
 					<textarea
 						type='text'
 						placeholder={ENTER_DESCRIPTION}
-						value={courseFields.description}
+						value={description}
 						name='description'
 						onChange={handleChange}
 					/>
@@ -213,20 +186,20 @@ function CourseForm() {
 								min='1'
 								step='1'
 								placeholder={ENTER_DURATION}
-								value={courseFields.duration}
+								value={duration}
 								name='duration'
 								onKeyPress={handleKeyPress}
 								onChange={handleChange}
 							/>
 							<span className='info-duration'>
-								Duration: <b>{pipeDuration(courseFields.duration)}</b>
+								Duration: <b>{pipeDuration(duration)}</b>
 								{HOURS}
 							</span>
 						</div>
 						<div className='authors'>
 							<h4 className='author-title'>Authors</h4>
 							<p className='info'>
-								{courseFields.authors.map((item) => (
+								{availableAuthors.map((item) => (
 									<span key={item.id} className='author-item'>
 										{' '}
 										{item.name}
@@ -234,17 +207,17 @@ function CourseForm() {
 											id={item.id}
 											className='btn-add'
 											text={BTN_ADD_AUTHOR}
-											onClick={(e) => addCourseAuthor(e)}
+											onClick={() => addCourseAuthor(item.id)}
 										/>
 									</span>
 								))}
 							</p>
 							<h4 className='author-title'>Course authors</h4>
 							<div className='author-title'>
-								{authorsCourse.length === 0 && 'Author list is empty'}
+								{courseAuthors.length === 0 && 'Author list is empty'}
 							</div>
 							<p className='info'>
-								{[...authorsCourse].map((item) => (
+								{[...courseAuthors].map((item) => (
 									<span key={item.id} className='author-item authors-course'>
 										{' '}
 										{item.name}
@@ -252,7 +225,7 @@ function CourseForm() {
 											id={item.id}
 											className='btn-add'
 											text={BTN_DEL_AUTHOR}
-											onClick={(e) => delCourseAuthor(e)}
+											onClick={() => delCourseAuthor(item.id)}
 										/>
 									</span>
 								))}

@@ -1,5 +1,5 @@
-export default function authorsFilter(authors, e, options = {}) {
-	return options.inverse
-		? authors.filter((author) => author.id !== e.target.id)
-		: authors.filter((author) => author.id === e.target.id);
+export default function authorsFilter(authors, authorId, options = null) {
+	return options
+		? authors.filter((id) => id !== authorId)
+		: authors.filter((author) => author.id === authorId);
 }
