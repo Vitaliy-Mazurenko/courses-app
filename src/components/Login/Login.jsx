@@ -44,6 +44,7 @@ export default function Login() {
 					result.result
 				);
 				localStorageAPI.setToken(result.result);
+				localStorageAPI.setUser(result.user.name);
 			} else if (result.result) {
 				setError(result.result);
 			} else {

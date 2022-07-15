@@ -1,39 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAuthorsList } from '../../store/authors/thunk';
-import { getCoursesList } from '../../store/courses/thunk';
-import { getCourses, getAuthors, isFetch } from '../../selectors';
+import { useSelector } from 'react-redux';
+import { useThunks } from '../../hooks/useThunks';
+import { getCourses, getAuthors } from '../../selectors';
 import searchByIdAndTitle from '../../helpers/searchByIdAndTitle';
 import CourseCard from './components/CourseCard/CourseCard';
 import SearchBar from './components/SearchBar/SearchBar';
 import './courses.css';
 
 function Courses() {
-	const dispatch = useDispatch();
+	const bindedThunks = useThunks();
 	const coursesList = useSelector(getCourses);
 	const authorsList = useSelector(getAuthors);
-	const coursesFetching = useSelector(isFetch);
 	const [courses, setCourse] = useState(coursesList);
 
 	useEffect(() => {
-		if (courses.length) {
-			setCourse(courses);
+		if (!coursesList || !coursesList.length) {
+			bindedThunks.getCoursesList();
+			bindedThunks.getAuthorsList();
 		}
-	}, [courses]);
+	}, [bindedThunks, coursesList]);
 
 	useEffect(() => {
-		if (!coursesFetching) {
-			dispatch(getCoursesList());
-		} else {
+		if (coursesList) {
 			setCourse(coursesList);
 		}
-	}, [coursesFetching, coursesList, dispatch]);
-
-	useEffect(() => {
-		if (!authorsList.length) {
-			dispatch(getAuthorsList());
-		}
-	}, [authorsList, dispatch]);
+	}, [coursesList]);
 
 	const searchValue = (value) => {
 		value

@@ -1,9 +1,9 @@
 import * as actions from './actionTypes';
 export const getUser = (name, email, token, role) => ({
-	type: actions.GET_USER,
+	type: actions.LOGIN,
 	name,
 	email,
 	token,
 	role,
 });
-export const delUser = () => ({ type: actions.DEL_USER });
+export const delUser = () => ({ type: actions.LOGOUT });

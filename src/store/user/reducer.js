@@ -7,9 +7,9 @@ const userInitialState = {
 	token: '',
 	role: '',
 };
-export default function authorsReducer(state = userInitialState, action) {
+export default function userReducer(state = userInitialState, action) {
 	switch (action.type) {
-		case actions.GET_USER:
+		case actions.LOGIN:
 			return {
 				isAuth: true,
 				name: action.name,
@@ -17,7 +17,7 @@ export default function authorsReducer(state = userInitialState, action) {
 				token: action.token,
 				role: action.role,
 			};
-		case actions.DEL_USER:
+		case actions.LOGOUT:
 			return userInitialState;
 		default:
 			return state;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
 	BrowserRouter as Router,
 	Routes,
@@ -13,24 +13,11 @@ import CourseForm from './components/CourseForm/CourseForm';
 import CourseInfo from './components/CourseInfo/CourseInfo';
 import PrivateRouter from './components/PrivateRouter/PrivateRouter';
 import { useSelector } from 'react-redux';
-import { useThunks } from './hooks/useThunks';
-import { getToken } from './selectors';
-import { localStorageAPI } from './helpers/localStorageAPI';
+import { getIsAuth } from './selectors';
 import './App.css';
 
 function App() {
-	const [token, setToken] = useState(localStorageAPI.getUserToken());
-	const userToken = useSelector(getToken);
-	const bindedThunks = useThunks();
-
-	useEffect(() => {
-		if (token) {
-			setToken(userToken);
-			bindedThunks.thunkCurrentUser(token);
-		} else {
-			setToken(userToken);
-		}
-	}, [bindedThunks, token, userToken]);
+	const isAuth = useSelector(getIsAuth);
 
 	return (
 		<div className='App'>
@@ -40,12 +27,12 @@ function App() {
 					<Route path='/' element={<Navigate replace to='/login' />} />
 					<Route
 						path='/login'
-						element={token ? <Navigate to='/courses' /> : <Login />}
+						element={isAuth ? <Navigate to='/courses' /> : <Login />}
 					/>
 					<Route path='/registration' element={<Registration />} />
 					<Route
 						path='/courses'
-						element={token ? <Courses /> : <Navigate replace to='/login' />}
+						element={isAuth ? <Courses /> : <Navigate replace to='/login' />}
 					/>
 					<Route
 						path='/courses/add'

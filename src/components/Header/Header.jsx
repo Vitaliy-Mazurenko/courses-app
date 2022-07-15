@@ -5,7 +5,7 @@ import Logo from './components/Logo/Logo';
 import Button from '../../common/Button/Button';
 import { BUTTON_LOGOUT } from '../../constants';
 import { useSelector } from 'react-redux';
-import { getUserName, getRole } from '../../selectors';
+import { getUserName, getRole, getIsAuth } from '../../selectors';
 import { useThunks } from '../../hooks/useThunks';
 import { localStorageAPI } from '../../helpers/localStorageAPI';
 
@@ -13,8 +13,14 @@ export default function Header() {
 	const userName = useSelector(getUserName);
 	const userRole = useSelector(getRole);
 	const user = userName || userRole;
+	const isAuth = useSelector(getIsAuth);
 	const bindedThunks = useThunks();
 	const navigate = useNavigate();
+	const token = localStorageAPI.getUserToken();
+	if (token) {
+		bindedThunks.thunkCurrentUser(token);
+	}
+
 	const logOut = () => {
 		bindedThunks.thunkActionLogout();
 		localStorageAPI.clear();
@@ -24,7 +30,7 @@ export default function Header() {
 	return (
 		<div className='Header'>
 			<Logo />
-			{user && (
+			{isAuth && (
 				<div className='log'>
 					<span data-testid='user'>{user}</span>
 					<Button text={BUTTON_LOGOUT} onClick={logOut} />
