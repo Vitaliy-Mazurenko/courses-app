@@ -12,10 +12,7 @@ export default function userReducer(state = userInitialState, action) {
 		case actions.LOGIN:
 			return {
 				isAuth: true,
-				name: action.name,
-				email: action.email,
-				token: action.token,
-				role: action.role,
+				...action.payload,
 			};
 		case actions.LOGOUT:
 			return userInitialState;
