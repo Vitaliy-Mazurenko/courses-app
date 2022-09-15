@@ -6,7 +6,7 @@ import userReducer from './user/reducer';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
 	course: coursesReducer,
 	author: authorsReducer,
 	user: userReducer,

@@ -39,45 +39,41 @@ const CourseCard = ({ course, authorsList }) => {
 	};
 
 	return (
-		<>
-			<div className='courseCard' key={course.id}>
-				<div className='courseDescription'>
-					<h2 className='title'>{course.title}</h2>
-					<div className='description'>{course.description}</div>
-				</div>
-				<div className='courseInfo'>
-					<p className='information'>
-						Authors:
-						<span className='info'>{authorsListFormatting(authorsList)}</span>
-					</p>
-					<p className='information'>
-						Duration:{' '}
-						<span className='info'>
-							{pipeDuration(course.duration) + HOURS}
-						</span>
-					</p>
-					<p className='information'>
-						Creation:{' '}
-						<span className='info'>{makeDateFormat(course.creationDate)}</span>
-					</p>
-					<div className='btn-show-trash'>
-						<Button onClick={() => goToCourse(course.id)} text={BUTTON_SHOW} />
-						{isAdmin === 'admin' && (
-							<Button
-								onClick={() => updateCourse(course.id)}
-								text={<i className='fa fa-pencil'></i>}
-							></Button>
-						)}
-						{isAdmin === 'admin' && (
-							<Button
-								onClick={() => deleteCourse(course.id)}
-								text={<i className='fa fa-trash'></i>}
-							></Button>
-						)}
-					</div>
+		<li className='courseCard' data-testid='courseCard' key={course.id}>
+			<div className='courseDescription'>
+				<h2 className='title'>{course.title}</h2>
+				<div className='description'>{course.description}</div>
+			</div>
+			<div className='courseInfo'>
+				<p className='information'>
+					Authors:
+					<span className='info'>{authorsListFormatting(authorsList)}</span>
+				</p>
+				<p className='information'>
+					Duration:{' '}
+					<span className='info'>{pipeDuration(course.duration) + HOURS}</span>
+				</p>
+				<p className='information'>
+					Creation:{' '}
+					<span className='info'>{makeDateFormat(course.creationDate)}</span>
+				</p>
+				<div className='btn-show-trash'>
+					<Button onClick={() => goToCourse(course.id)} text={BUTTON_SHOW} />
+					{isAdmin === 'admin' && (
+						<Button
+							onClick={() => updateCourse(course.id)}
+							text={<i className='fa fa-pencil'></i>}
+						></Button>
+					)}
+					{isAdmin === 'admin' && (
+						<Button
+							onClick={() => deleteCourse(course.id)}
+							text={<i className='fa fa-trash'></i>}
+						></Button>
+					)}
 				</div>
 			</div>
-		</>
+		</li>
 	);
 };
 

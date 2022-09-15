@@ -136,7 +136,7 @@ function CourseForm() {
 	return (
 		<>
 			<div className='createCourse'>
-				<form className='form-create'>
+				<form className='form-create' data-testid='courseForm'>
 					<label>Title</label>
 					<div className='form-wrap'>
 						<Input

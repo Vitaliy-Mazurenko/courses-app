@@ -36,11 +36,15 @@ function Courses() {
 		<>
 			<div className='Courses'>
 				<SearchBar searchValue={searchValue} />
-				{courses.map((course) => (
-					<div key={course.id}>
-						<CourseCard course={course} authorsList={authorsList} />
-					</div>
-				))}
+				<ul data-testid='coursesList'>
+					{courses.map((course) => (
+						<CourseCard
+							key={course.id}
+							course={course}
+							authorsList={authorsList}
+						/>
+					))}
+				</ul>
 			</div>
 		</>
 	);

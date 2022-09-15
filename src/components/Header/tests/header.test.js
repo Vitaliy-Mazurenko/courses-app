@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Logo from '../components/Logo/Logo';
 import Header from '../Header';
 import { render } from '@testing-library/react';
@@ -7,10 +6,10 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 describe('Logo component', () => {
-	it('renders Logo without crashing', () => {
-		const div = document.createElement('div');
-		ReactDOM.render(<Logo />, div);
-	});
+	// it('renders Logo without crashing', () => {
+	// 	const div = document.createElement('div');
+	// 	render(<Logo />, div);
+	// });
 
 	it('renders Logo  correctly', () => {
 		render(<Logo />);
