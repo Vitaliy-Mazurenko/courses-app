@@ -2,25 +2,38 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { CourseForm } from '../../CourseForm/CourseForm';
-import { CourseCard } from '../components/CourseCard/CourseCard';
-import { mockedState } from '../../../mock';
+import CourseForm from '../../CourseForm/CourseForm';
+import Courses from '../Courses';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { mockedState, mockedStore } from '../../../mock';
+
+const { getByTestId, getAllByTestId, queryByTestId } = render(
+	<Provider store={mockedStore}>
+		<Router>
+			<Courses />
+			<CourseForm />
+		</Router>
+	</Provider>
+);
 
 describe('Courses', () => {
 	it('Render Courses', () => {
-		render(<CourseCard />);
-		const courseCards = screen.getAllByTestId('courseCard');
+		render(<Courses />);
+		screen.debug();
+		const courseCards = getAllByTestId('courseCard');
 		expect(courseCards).toHaveLength(mockedState.courses.length);
 
-		const coursesList = screen.getByTestId('coursesList');
+		const coursesList = getByTestId('coursesList');
 		expect(coursesList).toBeDefined();
 	});
 
 	it('CourseForm should be showed after a click on a button "Add new course"', () => {
 		render(<CourseForm />);
-		expect(screen.queryByTestId('courseForm')).toBeNull();
-		userEvent.click(screen.getByTestId('navigate-to-course-form-button'));
+		screen.debug();
+		expect(queryByTestId('courseForm')).toBeNull();
+		userEvent.click(getByTestId('navigate-to-course-form-button'));
 
-		expect(screen.getByTestId('courseForm')).toBeInTheDocument();
+		expect(getByTestId('courseForm')).toBeInTheDocument();
 	});
 });

@@ -6,10 +6,10 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 describe('Logo component', () => {
-	// it('renders Logo without crashing', () => {
-	// 	const div = document.createElement('div');
-	// 	render(<Logo />, div);
-	// });
+	it('renders Logo without crashing', () => {
+		const div = document.createElement('div');
+		render(<Logo />, div);
+	});
 
 	it('renders Logo  correctly', () => {
 		render(<Logo />);
