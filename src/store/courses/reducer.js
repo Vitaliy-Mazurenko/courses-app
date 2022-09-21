@@ -1,28 +1,21 @@
 import * as actions from './actionTypes';
 
-const coursesInitialState = {
-	courses: [],
-};
+const coursesInitialState = [];
 
-export default function coursesReducer(state = coursesInitialState, action) {
+export const coursesReducer = (state = coursesInitialState, action) => {
 	switch (action.type) {
 		case actions.SET_COURSES:
-			return { ...state, courses: action.payload };
+			return action.payload;
 		case actions.ADD_COURSES:
-			return { ...state, courses: [...state.courses, action.payload] };
+			return [...state, action.payload];
 		case actions.DEL_COURSES:
-			return {
-				...state,
-				courses: [
-					...state.courses.filter((course) => course.id !== action.payload),
-				],
-			};
+			return state.filter((course) => course.id !== action.payload);
 		case actions.UPDATE_COURSE:
-			const withoutCourse = state.courses.filter(
+			const withoutCourse = state.filter(
 				(course) => course.id !== action.payload.id
 			);
 			return [...withoutCourse, action.payload];
 		default:
 			return state;
 	}
-}
+};

@@ -1,5 +1,5 @@
-export const getCourses = (state) => state.course.courses;
-export const getAuthors = (state) => state.author.authors;
+export const getCourses = (state) => state.course;
+export const getAuthors = (state) => state.author;
 export const getToken = (state) => state.user.token;
 export const getUserName = (state) => state.user.name;
 export const getRole = (state) => state.user.role;

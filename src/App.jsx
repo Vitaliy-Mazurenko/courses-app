@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-	BrowserRouter as Router,
-	Routes,
-	Route,
-	Navigate,
-} from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login/Login';
 import Header from './components/Header/Header';
 import Registration from './components/Registration/Registration';
@@ -21,38 +16,36 @@ function App() {
 
 	return (
 		<div className='App'>
-			<Router>
-				<Header />
-				<Routes>
-					<Route path='/' element={<Navigate replace to='/login' />} />
-					<Route
-						path='/login'
-						element={isAuth ? <Navigate to='/courses' /> : <Login />}
-					/>
-					<Route path='/registration' element={<Registration />} />
-					<Route
-						path='/courses'
-						element={isAuth ? <Courses /> : <Navigate replace to='/login' />}
-					/>
-					<Route
-						path='/courses/add'
-						element={
-							<PrivateRouter>
-								<CourseForm />
-							</PrivateRouter>
-						}
-					/>
-					<Route
-						path='/courses/update/:courseId'
-						element={
-							<PrivateRouter>
-								<CourseForm />
-							</PrivateRouter>
-						}
-					/>
-					<Route exact path='/courses/:courseId' element={<CourseInfo />} />
-				</Routes>
-			</Router>
+			<Header />
+			<Routes>
+				<Route path='/' element={<Navigate replace to='/login' />} />
+				<Route
+					path='/login'
+					element={isAuth ? <Navigate to='/courses' /> : <Login />}
+				/>
+				<Route path='/registration' element={<Registration />} />
+				<Route
+					path='/courses'
+					element={isAuth ? <Courses /> : <Navigate replace to='/login' />}
+				/>
+				<Route
+					path='/courses/add'
+					element={
+						<PrivateRouter>
+							<CourseForm />
+						</PrivateRouter>
+					}
+				/>
+				<Route
+					path='/courses/update/:courseId'
+					element={
+						<PrivateRouter>
+							<CourseForm />
+						</PrivateRouter>
+					}
+				/>
+				<Route exact path='/courses/:courseId' element={<CourseInfo />} />
+			</Routes>
 		</div>
 	);
 }

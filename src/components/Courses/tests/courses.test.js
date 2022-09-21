@@ -8,6 +8,20 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { mockedState, mockedStore } from '../../../mock';
 
+// const mockedState = {
+// 	user: {
+// 		isAuth: true,
+// 		name: 'Test Name',
+// 	},
+// 	courses: [],
+// 	authors: [],
+// };
+// const mockedStore = {
+// 	getState: () => mockedState,
+// 	subscribe: jest.fn(),
+// 	dispatch: jest.fn(),
+// };
+
 const { getByTestId, getAllByTestId, queryByTestId } = render(
 	<Provider store={mockedStore}>
 		<Router>
