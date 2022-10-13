@@ -26,20 +26,18 @@ export default function Registration() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
-		return await userFetch(newUser, QUERY_REGISTER)
-			.then((response) => response.json())
-			.then((json) => {
-				if (json.successful) {
-					navigate('/login');
-				} else {
-					setError(json.errors.toString());
-				}
-			})
-			.catch((error) => {
-				console.warn(error.message);
-				setError(error.message);
-			});
+		try {
+			const response = await userFetch(newUser, QUERY_REGISTER);
+			const json = await response.json();
+			if (json.successful) {
+				navigate('/login');
+			} else {
+				setError(json.errors.toString());
+			}
+		} catch (error) {
+			console.warn(error.message);
+			setError(error.message);
+		}
 	};
 
 	return (
