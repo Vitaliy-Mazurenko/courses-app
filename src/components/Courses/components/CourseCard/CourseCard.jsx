@@ -5,6 +5,7 @@ import { BUTTON_SHOW, HOURS } from '../../../../constants';
 import Button from '../../../../common/Button/Button.jsx';
 import pipeDuration from '../../../../helpers/pipeDuration';
 import makeDateFormat from '../../../../helpers/makeDateFormat';
+import courseAuthorNames from '../../../../helpers/courseAuthorNames';
 import { useSelector } from 'react-redux';
 import { getRole } from '../../../../selectors';
 import { useThunks } from '../../../../hooks/useThunks';
@@ -14,13 +15,6 @@ const CourseCard = ({ course, authorsList }) => {
 	const isAdmin = useSelector(getRole);
 	const navigate = useNavigate();
 	const bindedThunks = useThunks();
-
-	const authorsListFormatting = (list) => {
-		return list
-			.filter((item) => course.authors.includes(item.id))
-			.map((item) => ' ' + item.name)
-			.toString();
-	};
 
 	const goToCourse = (id) => {
 		navigate(`/courses/${id}`);
@@ -47,11 +41,12 @@ const CourseCard = ({ course, authorsList }) => {
 			<div className='courseInfo'>
 				<p className='information'>
 					Authors:
-					<span className='info'>{authorsListFormatting(authorsList)}</span>
+					<span className='info'>{courseAuthorNames(course, authorsList)}</span>
 				</p>
 				<p className='information'>
 					Duration:{' '}
-					<span className='info'>{pipeDuration(course.duration) + HOURS}</span>
+					<span className='info'>{pipeDuration(course.duration)}</span>
+					<span className='hours'>{HOURS}</span>
 				</p>
 				<p className='information'>
 					Creation:{' '}
