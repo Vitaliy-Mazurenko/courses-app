@@ -4,7 +4,6 @@ import { screen } from '@testing-library/react';
 import { mockedState, mockedStore } from '../../../../../mock';
 import pipeDuration from '../../../../../helpers/pipeDuration';
 import makeDateFormat from '../../../../../helpers/makeDateFormat';
-import courseAuthorNames from '../../../../../helpers/courseAuthorNames';
 import { renderWithRouterAndStore } from '../../../../../testUtils/renderWithRouterAndStore';
 
 describe('CourseCard component', () => {
@@ -18,16 +17,13 @@ describe('CourseCard component', () => {
 			{ route, store: mockedStore }
 		);
 
-		const { title, description, duration, creationDate, authors } =
+		const { title, description, duration, creationDate } =
 			mockedState.courses[0];
-		// const getCourseAuthorNames = courseAuthorNames(
-		// 	mockedState.courses[0],
-		// 	authors
-		// );
+		const getCourseAuthorNames = 'Vasiliy Dobkin, Nicolas Kim';
 		expect(screen.getByText(title)).toBeInTheDocument();
 		expect(screen.getByText(description)).toBeInTheDocument();
 		expect(screen.getByText(pipeDuration(duration))).toBeInTheDocument();
 		expect(screen.getByText(makeDateFormat(creationDate))).toBeInTheDocument();
-		// expect(screen.getByText(getCourseAuthorNames)).toBeInTheDocument();
+		expect(screen.getByText(getCourseAuthorNames)).toBeInTheDocument();
 	});
 });
