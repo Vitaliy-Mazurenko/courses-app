@@ -1,26 +1,14 @@
 import React from 'react';
 import Logo from '../components/Logo/Logo';
 import Header from '../Header';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
-
-describe('Logo component', () => {
-	it('renders Logo without crashing', () => {
-		const div = document.createElement('div');
-		render(<Logo />, div);
-	});
-
-	it('renders Logo  correctly', () => {
-		render(<Logo />);
-	});
-});
 
 const mockedState = {
 	user: {
 		isAuth: true,
-		name: 'Name',
-		role: 'admin',
+		name: 'Test Name',
 	},
 };
 
@@ -30,9 +18,14 @@ const mockedStore = {
 	dispatch: jest.fn(),
 };
 
-describe('Header should have user"s name', () => {
-	it('user"s name', () => {
-		const { getByTestId } = render(
+describe('Header', () => {
+	it('should have logo', () => {
+		render(<Logo />);
+		expect(screen.getByTestId('logo')).toBeInTheDocument();
+	});
+
+	it('should have user"s name', () => {
+		const { getByTestId, getByText } = render(
 			<Provider store={mockedStore}>
 				<Router>
 					<Header />
@@ -40,5 +33,6 @@ describe('Header should have user"s name', () => {
 			</Provider>
 		);
 		expect(getByTestId('user')).toBeInTheDocument();
+		expect(getByText('Test Name')).toBeInTheDocument();
 	});
 });

@@ -22,16 +22,16 @@ import { mockedState, mockedStore } from '../../../mock';
 // 	dispatch: jest.fn(),
 // };
 
-const { getByTestId, getAllByTestId, queryByTestId } = render(
-	<Provider store={mockedStore}>
-		<Router>
-			<Courses />
-			<CourseForm />
-		</Router>
-	</Provider>
-);
-
 describe('Courses', () => {
+	const { getByTestId, getAllByTestId, queryByTestId } = render(
+		<Provider store={mockedStore}>
+			<Router>
+				<Courses />
+				<CourseForm />
+			</Router>
+		</Provider>
+	);
+
 	it('Render Courses', () => {
 		render(<Courses />);
 		screen.debug();
