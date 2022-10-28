@@ -1,17 +1,26 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-
 import CourseForm from '../../CourseForm/CourseForm';
 import Courses from '../Courses';
-import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
-// import { mockedState, mockedStore } from '../../../mock';
+import { Routes, Route } from 'react-router-dom';
+
+import { renderWithRouterAndStore } from '../../../testUtils/renderWithRouterAndStore';
+
+const RouterComponent = () => (
+	<>
+		<Routes>
+			<Route path='/courses' element={<Courses />} />
+			<Route path='/courses/add' element={<CourseForm />} />
+		</Routes>
+	</>
+);
 
 const mockedState = {
 	user: {
 		isAuth: true,
 		name: 'Test Name',
+		role: 'admin',
 	},
 	course: [
 		{
@@ -57,31 +66,27 @@ const mockedStore = {
 };
 
 describe('Courses', () => {
-	const { getByTestId, getAllByTestId, queryByTestId } = render(
-		<Provider store={mockedStore}>
-			<Router>
-				<Courses />
-				<CourseForm />
-			</Router>
-		</Provider>
-	);
+	beforeEach(() => {
+		const route = '/courses';
 
+		renderWithRouterAndStore(<RouterComponent />, {
+			route,
+			store: mockedStore,
+		});
+	});
 	it('Render Courses', () => {
-		// render(<Courses />);
-		screen.debug();
-		const courseCards = getAllByTestId('courseCard');
+		const courseCards = screen.getAllByTestId('courseCard');
 		expect(courseCards).toHaveLength(mockedState.course.length);
 
-		const coursesList = getByTestId('coursesList');
+		const coursesList = screen.getByTestId('coursesList');
+
 		expect(coursesList).toBeDefined();
 	});
 
 	it('CourseForm should be showed after a click on a button "Add new course"', () => {
-		// render(<CourseForm />);
-		screen.debug();
-		expect(queryByTestId('courseForm')).toBeNull();
-		userEvent.click(getByTestId('navigate-to-course-form-button'));
+		expect(screen.queryByTestId('courseForm')).toBeNull();
 
-		expect(getByTestId('courseForm')).toBeInTheDocument();
+		userEvent.click(screen.getByTestId('courseFormButton'));
+		expect(screen.getByTestId('courseForm')).toBeInTheDocument();
 	});
 });

@@ -11,3 +11,13 @@
   margin-inline-end: 0px;
   padding-inline-start: 0px;
 }
+.coursesHeader {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0.7%;
+}
+
+.coursesHeader > button {
+  height: 33px;
+  margin-top: 1%;
+}

@@ -7,10 +7,10 @@
 
 .search .form-inline {
   margin: 1%;
-  width: 60%;
+  display: inline-flex;
 }
 .search .form-inline > input{
   display: inline-flex;
   height: 33px;
-  width: 60%;
+  max-width: 40vw;
 }

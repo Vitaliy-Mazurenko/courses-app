@@ -1,25 +1,16 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Button from '../../../../common/Button/Button';
 import Input from '../../../../common/Input/Input';
-import {
-	BUTTON_TEXT,
-	BUTTON_ADD_COURSE,
-	ENTER_COURSE_NAME,
-} from '../../../../constants';
+import { BUTTON_TEXT, ENTER_COURSE_NAME } from '../../../../constants';
 import './searchBar.css';
 
 export default function SearchBar({ searchValue }) {
 	const [value, setValue] = useState('');
-	const navigate = useNavigate();
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		searchValue(value);
 		setValue('');
-	};
-	const goToCreateCourseForm = () => {
-		navigate('/courses/add');
 	};
 
 	return (
@@ -33,11 +24,6 @@ export default function SearchBar({ searchValue }) {
 				/>
 				<Button type='submit' text={BUTTON_TEXT} />
 			</form>
-			<Button
-				text={BUTTON_ADD_COURSE}
-				data-testid='navigate-to-course-form-button'
-				onClick={goToCreateCourseForm}
-			/>
 		</div>
 	);
 }
