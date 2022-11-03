@@ -13,10 +13,6 @@ import './courses.css';
 function Courses() {
 	const bindedThunks = useThunks();
 	const coursesList = useSelector(getCourses);
-	// const coursesList = useSelector((state) => {
-	// 	console.log(state);
-	// 	return state.courses;
-	// });
 	const isAdmin = useSelector(getRole);
 	const authorsList = useSelector(getAuthors);
 	const [courses, setCourse] = useState(coursesList);
