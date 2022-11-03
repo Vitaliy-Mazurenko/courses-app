@@ -15,7 +15,7 @@ function Courses() {
 	const coursesList = useSelector(getCourses);
 	// const coursesList = useSelector((state) => {
 	// 	console.log(state);
-	// 	return state.course;
+	// 	return state.courses;
 	// });
 	const isAdmin = useSelector(getRole);
 	const authorsList = useSelector(getAuthors);

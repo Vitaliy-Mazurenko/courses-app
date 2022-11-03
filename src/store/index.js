@@ -7,8 +7,8 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 
 export const rootReducer = combineReducers({
-	course: coursesReducer,
-	author: authorsReducer,
+	courses: coursesReducer,
+	authors: authorsReducer,
 	user: userReducer,
 });
 
