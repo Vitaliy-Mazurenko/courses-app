@@ -1,0 +1,16 @@
+.search{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-right: 0.8%;
+}
+
+.search .form-inline {
+  margin: 1%;
+  display: inline-flex;
+}
+.search .form-inline > input{
+  display: inline-flex;
+  height: 33px;
+  max-width: 40vw;
+}

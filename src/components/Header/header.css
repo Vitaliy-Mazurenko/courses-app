@@ -1,0 +1,13 @@
+.Header {
+  border: 2px solid #DFB3B3;
+  margin: 1% 1%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Header .log button{
+  margin: 25px;
+  font-size: 13px;
+  padding: 4px 15px;
+}
